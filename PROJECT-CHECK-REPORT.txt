@@ -1,0 +1,25 @@
+RASEL ON THE RUN — PROJECT CHECK REPORT
+
+Updated:
+- Added correct emoji flags for all 50 starter countries.
+- Preserved customFlag overrides, so user-selected flags continue to take priority.
+- Added country-appropriate administrative labels for all 50 starter countries.
+- Added plural forms for labels such as Country/Countries, County/Counties,
+  Municipality/Municipalities and Autonomous Community/Autonomous Communities.
+- Added accessible flag labels (aria-label/title) to country cards.
+- Kept the existing country > administrative area > city > photos data structure.
+- Preserved the existing administrative area datasets and existing section-color CSS.
+- Did not remove or rewrite existing feature modules.
+
+Validation:
+- 50 of 50 starter countries have administrative-area data.
+- 53 country datasets are present in administrative-areas.json.
+- All 32 local script/style references in index.html resolve.
+- All 33 JavaScript files passed Node.js syntax checks.
+- No duplicate administrative-area names were found in the JSON datasets.
+
+Packaging:
+- Backup copies (*.backup and *.before-*) are excluded from the clean delivery ZIP.
+- The original project files and feature modules are retained.
+- Browser runtime, Supabase credentials/configuration, and live deployment were not
+  tested because those require the user's browser/account environment.

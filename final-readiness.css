@@ -1,0 +1,19 @@
+/* Final responsive and accessibility polish — shared design across Android, iPhone, Mac and Windows. */
+:root { --rnr-safe-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: 112px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { min-width: 320px; overflow-wrap: break-word; font-family: Helvetica, Arial, sans-serif; }
+img, video, iframe { max-width: 100%; }
+button, input, select, textarea { max-width: 100%; }
+:where(button, a, input, select, textarea) { touch-action: manipulation; }
+body.rnr-keyboard-user :where(a,button,input,select,textarea,[tabindex]):focus-visible { outline: 3px solid #9b7138; outline-offset: 3px; }
+.rnr-invalid { outline: 2px solid #b34343 !important; outline-offset: 2px; }
+.rnr-image-unavailable { min-height: 80px; object-fit: contain; background: rgba(120,120,120,.08); }
+.rnr-connectivity-status { display: none; position: fixed; z-index: 5000; left: 12px; right: 12px; bottom: calc(12px + var(--rnr-safe-bottom)); padding: 12px 16px; border-radius: 12px; background: #28343a; color: #fff; font: 13px/1.45 Helvetica,Arial,sans-serif; box-shadow: 0 8px 28px rgba(0,0,0,.18); }
+.rnr-connectivity-status.is-visible { display: block; }
+@media (max-width: 1100px) { .main-nav { gap: 10px; flex-wrap: wrap; } .section { padding-left: clamp(16px,3vw,30px); padding-right: clamp(16px,3vw,30px); } }
+@media (max-width: 768px) { .site-header { padding-left: 16px; padding-right: 16px; } .hero { min-height: auto; } .hero-content { padding: 52px 22px; } .section-heading { align-items: flex-start; gap: 14px; flex-wrap: wrap; } .country-grid, .memory-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .study-form-grid { grid-template-columns: 1fr; } #rnrFloating { right: 12px; bottom: calc(12px + var(--rnr-safe-bottom)); } }
+@media (max-width: 480px) { .brand-name { font-size: 19px; } .brand-tagline { font-size: 10px; } .hero-content h1 { font-size: clamp(34px,10vw,48px); line-height: 1.08; } .country-grid, .memory-grid { grid-template-columns: 1fr; } .section-heading h2 { font-size: clamp(25px,7vw,32px); } .rnr-tool { min-height: 44px; } .study-entry-form { padding: 16px; } }
+@media (min-width: 769px) and (max-width: 1200px) { .country-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media (min-width: 1201px) { main { width: min(100% - 64px, 1440px); margin-inline: auto; } }
+@media (hover: none) { .rnr-tool:hover, button:hover, a:hover { transform: none; } }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
