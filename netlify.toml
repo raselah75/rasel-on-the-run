@@ -1,0 +1,16 @@
+# Netlify settings for Rasel On the Run (static site, no build step).
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(self), geolocation=(self)"
+
+[[headers]]
+  for = "/advanced-sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"

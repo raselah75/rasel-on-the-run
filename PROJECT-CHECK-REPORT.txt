@@ -1,0 +1,78 @@
+RASEL ON THE RUN — PROJECT CHECK REPORT
+
+Updated:
+- Added correct emoji flags for all 50 starter countries.
+- Preserved customFlag overrides, so user-selected flags continue to take priority.
+- Added country-appropriate administrative labels for all 50 starter countries.
+- Added plural forms for labels such as Country/Countries, County/Counties,
+  Municipality/Municipalities and Autonomous Community/Autonomous Communities.
+- Added accessible flag labels (aria-label/title) to country cards.
+- Kept the existing country > administrative area > city > photos data structure.
+- Preserved the existing administrative area datasets and existing section-color CSS.
+- Did not remove or rewrite existing feature modules.
+
+Validation:
+- 50 of 50 starter countries have administrative-area data.
+- 53 country datasets are present in administrative-areas.json.
+- All 32 local script/style references in index.html resolve.
+- All 33 JavaScript files passed Node.js syntax checks.
+- No duplicate administrative-area names were found in the JSON datasets.
+
+Packaging:
+- Backup copies (*.backup and *.before-*) are excluded from the clean delivery ZIP.
+- The original project files and feature modules are retained.
+- Browser runtime, Supabase credentials/configuration, and live deployment were not
+  tested because those require the user's browser/account environment.
+
+
+FINAL CHECK — 17 NOVEMBER 2026
+- 34 of 34 JavaScript files pass Node.js syntax checks.
+- Automated tests: 18 passed, 0 failed.
+- All local script/style references in index.html resolve (now 35 incl. theme-final.css).
+- No JavaScript runtime errors at 390 / 1024 / 1280 / 1440 / 1920 px in Chrome.
+- Fixed: premium.js startup crash, arrange toggle, public Remove buttons,
+  removed countries returning, stale service-worker cache, header overlap,
+  editor hidden behind floating button on phones.
+- Backup copies (*.home-backup, *.before-*) removed from this package.
+
+
+PROFESSIONAL UPDATE — 17 NOVEMBER 2026
+- Five public pages (Home, Travels, Study Journey, Stories, About) + owner-only My Toolkit.
+- Home page height on desktop reduced from about 33,900 px to about 2,800 px (no data).
+- Visitors: no empty sections, forms, owner buttons or Admin button; checked at 390 and 1440 px.
+- Stories cards + story pages tested with sample chapters (open, next/previous, close, link).
+- Contact form, share tags, Netlify/Vercel configs and robots.txt added.
+- Fixed: phone drag-to-reorder could bounce cards back (browser scroll anchoring); now stable.
+- 38 of 38 JavaScript files pass syntax checks; tests 18/18; no runtime errors on any page.
+
+
+PREMIUM UPDATE — 17 NOVEMBER 2026
+- Publish/login tested end-to-end against a simulated Supabase server: email-link sign-in,
+  publish, new visitor sees content, update + refresh message, deleted items removed,
+  stranger account refused, private toolkit data not uploaded, photo camera data removed.
+  Not tested against a real Supabase project (no internet in the test environment).
+- Photo viewer, reveal animation, auto-resize (7.3 MB 4200x3000 -> 1.1 MB 2400x1714),
+  cover video, journey line, Bangla switch, logo and splash tested in Chrome at phone
+  and desktop sizes. 3D Earth library and analytics need internet; not loaded in tests.
+
+
+FINAL BUILD — 17 NOVEMBER 2026
+- New: Videos (cinematic <=15 s, travel <=2.5 min), owner text editing, study entry editing,
+  photo map, timeline, year card, best shots, Then & Now, next-trip
+  countdown, globe wishlist.
+- Visitor audit (desktop + phone): no owner button visible on Home, Travels, Videos,
+  Timeline, Study Journey, Stories, About, or on any country / division / city page.
+- Owner audit: add / edit / upload / delete available on every page and level.
+- Tested with simulated Wikipedia, map library and Supabase (no internet in the test
+  environment): real map tiles, real Wikipedia photos and real Supabase still need one
+  check on your own device.
+
+
+UPDATE — 17 NOVEMBER 2026 (seven themed features)
+- Added: passport stamps, dark mode, food diary, 360° views, animated trip routes,
+  seasonal cover themes with greetings, printable photo book.
+- Tested: every feature end to end (adding, editing, viewer, filters, route drawing,
+  WebGL 360° view, season dates, photo book preview), dark mode on every page
+  (desktop + phone), Bangla text, publishing (new data included), and the visitor
+  audit: no owner buttons visible anywhere, including the new sections.
+- Removed earlier today: likes, share buttons and per-item links.

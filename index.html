@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f2233">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Travels, study journey and stories of Rasel Ahmmed, an international student in Toronto with a dream of seeing the whole world.">
+
+  <title>Rasel On the Run | Every Journey Tells a Story</title>
+  <!-- Share preview (WhatsApp, Facebook, Messenger, LinkedIn, X).
+       AFTER THE SITE IS ONLINE: (1) add <meta property="og:url" content="https://YOUR-DOMAIN/">
+       (2) change both image addresses below to https://YOUR-DOMAIN/og-image.jpg (your logo card). -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rasel On the Run">
+  <meta property="og:title" content="Rasel On the Run — Every Journey Tells a Story">
+  <meta property="og:description" content="Travels, study journey and stories of Rasel Ahmmed, an international student in Toronto with a dream of seeing the whole world.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=80">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mountains reflected in a calm lake">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rasel On the Run — Every Journey Tells a Story">
+  <meta name="twitter:description" content="Travels, study journey and stories of Rasel Ahmmed.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=80">
+  <meta name="author" content="Rasel Ahmmed">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect x=%222%22 y=%222%22 width=%2260%22 height=%2260%22 rx=%2218%22 fill=%22%230f2233%22/%3E%3Ccircle cx=%2244%22 cy=%2220%22 r=%226%22 fill=%22%23f08a5d%22/%3E%3Cpath d=%22M8 50 24 28l8 11 7-8 17 19Z%22 fill=%22%231d6b74%22/%3E%3Cpath d=%22M21 46V20h9.5a7 7 0 0 1 0 14H21m8 0 9 12%22 fill=%22none%22 stroke=%22white%22 stroke-width=%224.2%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+
+  <script>try{if(localStorage.getItem('raselOnTheRunThemeModeV1')==='dark'){document.documentElement.classList.add('rnr-dark');document.querySelector('meta[name="theme-color"]').content='#071019';}}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="premium-modules-refinement.css">
+  <link rel="stylesheet" href="final-readiness.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="#">
+      <span class="brand-name">Rasel On the Run</span>
+      <span class="brand-tagline">Every Journey Tells a Story.</span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="#home">Home</a>
+      <a href="#destinations">Destinations</a>
+      <a href="#memories">My Memories</a>
+      <a href="#studyJourney">My Study Journey</a>
+      <a href="#advancedAdventure">Adventure+</a>
+      <a href="#finalJourneyPack">Final Journey</a>
+      <button id="uploadNavButton" class="nav-upload" type="button">
+        Add Photos
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <p class="eyebrow">MY PERSONAL TRAVEL JOURNAL</p>
+        <h1>Collect moments.<br>Remember journeys.</h1>
+        <p class="hero-description">
+          A personal collection of places I've explored,
+          people I've met, and memories I've made.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary-button" href="#destinations">
+            Explore My Travels
+          </a>
+          <button class="secondary-button" id="heroUploadButton" type="button">
+            Add Your Memories
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-photo">
+        <div class="photo-caption">
+          <span>THE WORLD IS A BOOK</span>
+          <strong>Keep turning the pages.</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-section">
+      <p class="eyebrow">WELCOME TO MY WORLD</p>
+      <h2>Every destination has a story.</h2>
+      <p>
+        This is where I keep my travel photographs and experiences,
+        organized by country, region, and city.
+      </p>
+    </section>
+
+    <section class="section" id="destinations">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE JOURNEY</p>
+          <h2>My Destinations</h2>
+          <p>Explore my memories, one destination at a time.</p>
+        </div>
+
+        <button id="addCountryButton" class="outline-button" type="button">
+          Add Country
+        </button>
+      </div>
+
+      <div id="countryList" class="country-grid">
+        <div class="empty-state">
+          
+          <h3>Your journey starts here</h3>
+          <p>Add your first country to begin building your travel archive.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section memories-section" id="memories">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PERSONAL COLLECTION</p>
+          <h2>My Travel Memories</h2>
+          <p>Your photographs, preserved in one beautiful place.</p>
+        </div>
+
+        <button id="uploadMemoryButton" class="primary-button" type="button">
+          Upload Photos
+        </button>
+      </div>
+
+      <div id="memoryGallery" class="memory-grid">
+        <div class="empty-state">
+          
+          <h3>Your memories belong here</h3>
+          <p>Choose photos from your Mac to start your collection.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section study-journey-section" id="studyJourney">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">BEYOND THE DESTINATIONS</p>
+          <h2>My Study Journey</h2>
+          <p>Every classroom, every lesson, and every memory that helped shape my journey.</p>
+        </div>
+        <button id="addStudyEntryButton" class="primary-button study-admin-only" type="button">Add Study Memory</button>
+      </div>
+
+      <div class="study-intro">
+        <span class="study-intro-kicker">A JOURNEY THROUGH THE YEARS</span>
+        <p>From my first school days to college and university — a collection of the people, places, achievements, and little moments I'll always remember.</p>
+      </div>
+
+      <form id="studyEntryForm" class="study-entry-form study-admin-only" hidden>
+        <div class="study-form-grid">
+          <label>Education level<select id="studyLevel" required><option value="Primary School">Primary School</option><option value="High School">High School</option><option value="College">College</option><option value="University">University</option><option value="Other">Other</option></select></label>
+          <label>School / Institution<input id="studyInstitution" type="text" maxlength="100" placeholder="School or institution name" required></label>
+          <label>Year or period<input id="studyPeriod" type="text" maxlength="50" placeholder="e.g. 2015–2020"></label>
+          <label>Memory title<input id="studyTitle" type="text" maxlength="100" placeholder="A special day, a new beginning..." required></label>
+          <label class="study-story-field">Your story<textarea id="studyStory" rows="3" maxlength="1200" placeholder="Write a little about this chapter of your life..."></textarea></label>
+          <label class="study-story-field">Photos<input id="studyPhotos" type="file" accept="image/*" multiple></label>
+        </div>
+        <div class="study-form-actions"><button class="primary-button" type="submit">Save Memory</button><button class="outline-button" id="cancelStudyEntry" type="button">Cancel</button><span id="studyFormStatus" role="status"></span></div>
+      </form>
+
+      <div id="studyJourneyTimeline" class="study-timeline" aria-live="polite">
+        <div class="empty-state study-empty"><h3>Your story starts in the classroom</h3><p>School photographs, class memories, certificates, friends, and milestones will live here.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-brand" href="#">Rasel On the Run</a>
+    <p>Every Journey Tells a Story.</p>
+    <p class="copyright">© 2026 Rasel On the Run. All rights reserved.</p>
+  </footer>
+
+  <script src="site-config.js"></script>
+  <script src="cloud-publish.js"></script>
+  <script src="administrative-areas.js"></script>
+  <script src="cities.js"></script>
+  <script src="script.js"></script>
+  <script src="features.js"></script>
+  <script src="premium.js"></script>
+  <script src="human-experience.js"></script>
+  <script src="next-upgrade.js"></script>
+  <script src="adventure-explorer.js"></script>
+  <script src="advanced-explorer.js"></script>
+  <script src="ultimate-core.js"></script>
+  <script src="ultimate-explorer.js"></script>
+  <script src="final-journey-core.js"></script>
+  <script src="final-journey.js"></script>
+  <script src="content-manager-core.js"></script>
+  <script src="content-manager.js"></script>
+  <script src="lifetime-documentary.js"></script>
+  <script src="premium-seven.js"></script>
+  <script src="profile-access.js"></script>
+  <script src="short-video-gallery.js"></script>
+  <script src="media-count-dashboard.js"></script>
+  <script src="archive-watermark.js"></script>
+  <script src="study-journey.js"></script>
+  <script src="visual-upgrade.js"></script>
+  <script src="navigation-experience.js"></script>
+  <script src="final-readiness.js"></script>
+  <script src="security-maintenance.js"></script>
+  <script src="key-features-polish.js"></script>
+  <script src="section-color-system.js"></script>
+  <script src="archive-polish.js"></script>
+  <script src="country-reorder.js"></script>
+  <script src="brand.js"></script>
+  <script src="country-showcase.js"></script>
+  <script src="photo-gallery.js"></script>
+  <script src="world-clock.js"></script>
+  <script src="site-stories.js"></script>
+  <script src="videos.js"></script>
+  <script src="travel-globe.js"></script>
+  <script src="photo-map.js"></script>
+  <script src="passport.js"></script>
+  <script src="trip-routes.js"></script>
+  <script src="panorama.js"></script>
+  <script src="extras.js"></script>
+  <script src="food-diary.js"></script>
+  <script src="timeline.js"></script>
+  <script src="seasons.js"></script>
+  <script src="photo-book.js"></script>
+  <script src="site-pages.js"></script>
+  <script src="owner-edit.js"></script>
+  <script src="premium-ux.js"></script>
+  <script src="language.js"></script>
+  <script src="theme-mode.js"></script>
+  <!-- Final theme: loaded last so it sits above styles injected by the feature modules. -->
+  <link rel="stylesheet" id="rnrThemeFinal" href="theme-final.css">
+</body>
+</html>
+
