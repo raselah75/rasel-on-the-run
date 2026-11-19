@@ -26,23 +26,26 @@
 
   const PAGES = {
     home:    { label: 'Home', sections: ['home', 'welcome', 'rnrNextTrip', 'rnrBestShots', 'destinations', 'memories', 'rnrStories', 'rnrVideos'] },
-    travels: { label: 'Travel Destinations', title: 'Travel Destinations', text: 'Countries, cities and the photographs from every road I have travelled.', sections: ['rnrGlobe', 'rnrPassport', 'rnrTripRoutes', 'rnrPhotoMap', 'destinations', 'memories', 'rnrPanoramas'] },
+    travels: { label: 'Travel Destinations', title: 'Travel Destinations', text: 'Countries, cities and the photographs from every road I have travelled.', sections: ['rnrGlobe', 'rnrPassport', 'rnrDistricts', 'rnrTripRoutes', 'rnrPhotoMap', 'destinations', 'memories', 'rnrPanoramas'] },
     videos:  { label: 'Videos', title: 'Videos', text: 'Cinematic moments and travel videos from the road.', sections: ['rnrVideos'], soon: 'The first videos are being edited.' },
     timeline: { label: 'Timeline', title: 'Timeline', text: 'Every photo, video and story in the order it happened.', sections: ['rnrTimeline'], soon: 'Add dates to your photos to build your timeline.' },
     study:   { label: 'Study Journey', title: 'My Study Journey', text: 'From my first classroom to studying in Canada, one chapter at a time.', sections: ['studyJourney'], soon: 'Study memories are on their way.' },
     stories: { label: 'Stories', title: 'Stories', text: 'The moments, people and places behind the photographs.', sections: ['rnrStories', 'rnrFood', 'rnrThenNow', 'lifetimeDocumentary'], soon: 'The first stories are being written.' },
-    about:   { label: 'About Me', title: 'About Me', text: 'An international student in Toronto with a dream of seeing the whole world.', sections: ['aboutMeSection', 'contact'] },
+    plan:    { label: 'My Journey Plan', title: 'My Journey Plan', text: 'Trips, plans and adventures — where I have been and where I am going next.', sections: ['rnrJourneyPlan'], soon: 'The first plans are being written.' },
+    about:   { label: 'About Me', title: 'About Me', text: 'An international student in Toronto with a dream of seeing the whole world.', sections: ['aboutMeSection', 'rnrGuestbook', 'contact'] },
     toolkit: { label: 'My Toolkit', owner: true, title: 'My Toolkit', text: 'Private tools to plan, record and back up your journeys. Only you can see this page.', sections: [] }
   };
   // Sections that are only for the owner, even on public pages.
   const OWNER_ONLY_SECTIONS = new Set(['lifetimeDocumentary']);
-  const ORDER = ['home', 'travels', 'stories', 'timeline', 'study', 'toolkit', 'videos', 'about'];
+  // Older photo tools that were removed from My Toolkit (kept in the files, never shown).
+  const RETIRED_SECTIONS = new Set(['premiumStudio', 'humanJournal', 'rnrArchivePolish']);
+  const ORDER = ['home', 'travels', 'stories', 'timeline', 'study', 'plan', 'toolkit', 'videos', 'about'];
 
   // Every section not placed on a public page goes to the owner's toolkit.
   function assignToolkit() {
     const placed = new Set(ORDER.filter(key => key !== 'toolkit').flatMap(key => PAGES[key].sections));
     PAGES.toolkit.sections = [...main.children]
-      .filter(el => el.tagName === 'SECTION' && el.id && !placed.has(el.id) && el.id !== 'rnrPageBanner' && el.id !== 'rnrComingSoon')
+      .filter(el => el.tagName === 'SECTION' && el.id && !placed.has(el.id) && !RETIRED_SECTIONS.has(el.id) && el.id !== 'rnrPageBanner' && el.id !== 'rnrComingSoon')
       .map(el => el.id);
   }
 
@@ -183,7 +186,7 @@
   function navSequence() {
     const link = key => nav.querySelector(`a.rnr-nav-link[data-page="${key}"]`);
     const id = x => document.getElementById(x);
-    return [link('home'), link('travels'), link('stories'), link('timeline'), link('study'), link('toolkit'),
+    return [link('home'), link('travels'), link('stories'), link('timeline'), link('study'), link('plan'), link('toolkit'),
       id('uploadNavButton'), link('videos'), id('rnrPublishButton'), link('about'), id('ownerAdminToggle')].filter(Boolean);
   }
   let arranging = false;
@@ -221,6 +224,11 @@
   document.fonts?.ready?.then(scheduleFit);
   new MutationObserver(scheduleFit).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
+  // Floating "back" / "top" buttons: top only after scrolling, back not on Home.
+  let scrolledOn = false;
+  const onScroll = () => { const on = scrollY > 520; if (on !== scrolledOn) { scrolledOn = on; document.body.classList.toggle('rnr-scrolled', on); } };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
   function buildFooter() {
     const footer = document.querySelector('.site-footer');
     if (!footer || footer.querySelector('.rnr-footer-links')) return;
@@ -246,8 +254,11 @@
     if (section.id === 'rnrTimeline') return section.classList.contains('has-items');
     if (section.id === 'rnrPhotoMap') return section.classList.contains('has-places');
     if (section.id === 'rnrPassport') return section.classList.contains('has-stamps');
+    if (section.id === 'rnrDistricts') return section.classList.contains('has-items') || isAdmin();
+    if (section.id === 'rnrJourneyPlan') return section.classList.contains('has-items');
     if (section.id === 'rnrTripRoutes') return section.classList.contains('has-trips');
     if (section.id === 'rnrPanoramas' || section.id === 'rnrFood') return section.classList.contains('has-items');
+    if (section.id === 'rnrGuestbook') return section.classList.contains('is-live');
     if (section.id === 'rnrVideos') return current === 'home' ? Boolean(section.querySelector('.rnr-cine-card')) : Boolean(section.querySelector('.rnr-film-card'));
     return true;
   };
@@ -288,11 +299,25 @@
     return ORDER.find(key => PAGES[key].sections.includes(id) && (!PAGES[key].owner || isAdmin())) || null;
   }
 
+  // Soft fade + rise when moving between pages (skipped for reduced motion).
+  let pageReady = false, transitionTimer = 0;
+  setTimeout(() => { pageReady = true; }, 600);
+  function playPageTransition() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const body = document.body;
+    body.classList.remove('rnr-page-enter');
+    void body.offsetWidth;
+    body.classList.add('rnr-page-enter');
+    clearTimeout(transitionTimer);
+    transitionTimer = setTimeout(() => body.classList.remove('rnr-page-enter'), 700);
+  }
+
   function showPage(key, { push = true, scroll = 'top' } = {}) {
     if (!PAGES[key] || (PAGES[key].owner && !isAdmin())) key = 'home';
     const changed = key !== current;
     current = key;
     applyPage();
+    if (changed && pageReady) playPageTransition();
     if (push && location.hash !== `#${key}`) history.pushState({ rnrPage: key }, '', `#${key}`);
     if (scroll === 'top' && changed) window.scrollTo({ top: 0, behavior: 'instant' });
     header?.classList.remove('rnr-menu-open');
@@ -313,6 +338,17 @@
     return nativeScrollIntoView.apply(this, args);
   };
 
+  // A link to something that no longer exists: land on Home with a friendly note.
+  function lostNotice() {
+    const bn = document.documentElement.lang === 'bn';
+    let note = document.getElementById('rnrLostNote');
+    if (!note) { note = document.createElement('div'); note.id = 'rnrLostNote'; note.className = 'rnr-lost-note'; note.setAttribute('role', 'status'); document.body.append(note); }
+    note.textContent = bn ? 'এই লিংকটি কোথাও যায় না — তাই আপনাকে হোমে নিয়ে এলাম।' : "That link doesn't lead anywhere — so here's home.";
+    note.classList.add('is-on');
+    clearTimeout(lostNotice.t);
+    lostNotice.t = setTimeout(() => note.classList.remove('is-on'), 4200);
+  }
+
   function route({ push = false } = {}) {
     const hash = decodeURIComponent(location.hash.slice(1));
     if (hash === 'owner') {
@@ -327,7 +363,8 @@
     const target = document.getElementById(hash);
     const section = target?.closest('main > section');
     const key = section ? pageOfSection(section.id) : null;
-    showPage(key || 'home', { push: false, scroll: 'none' });
+    showPage(key || 'home', { push: false, scroll: key ? 'none' : 'top' });
+    if (!target) { history.replaceState(null, '', '#home'); lostNotice(); }
     if (target) requestAnimationFrame(() => nativeScrollIntoView.call(target, { block: 'start' }));
   }
 
@@ -387,6 +424,6 @@
     if (grid) new MutationObserver(refresh).observe(grid, { childList: true, subtree: true });
     document.body.classList.add('rnr-pages-ready');
   }
-  window.RNR_PAGES = { show: key => showPage(key), refresh: () => applyPage(), current: () => current };
+  window.RNR_PAGES = { show: (key, opts) => showPage(key, opts), refresh: () => applyPage(), current: () => current, hasContent: id => { const el = document.getElementById(id); return Boolean(el) && hasRealContent(el); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true }); else init();
 })();

@@ -182,7 +182,9 @@
     let bitmap;
     try { bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch { return file; }
     const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
-    if (scale === 1 && file.size < MIN_BYTES) { bitmap.close?.(); return file; }
+    // A photo that still carries its GPS position is always re-saved (which removes it).
+    const hasGps = window.RNR_SMART_UPLOAD?.exifGPS ? Boolean(await window.RNR_SMART_UPLOAD.exifGPS(file).catch(() => null)) : false;
+    if (scale === 1 && file.size < MIN_BYTES && !hasGps) { bitmap.close?.(); return file; }
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(bitmap.width * scale);
     canvas.height = Math.round(bitmap.height * scale);
@@ -193,7 +195,7 @@
     const keepPng = file.type === 'image/png' && file.size < 4 * 1024 * 1024;
     const type = keepPng ? 'image/png' : 'image/jpeg';
     const blob = await new Promise(resolve => canvas.toBlob(resolve, type, 0.86));
-    if (!blob || blob.size >= file.size) return file;
+    if (!blob || (blob.size >= file.size && !hasGps)) return file;
     const name = keepPng ? file.name : file.name.replace(/\.(png|heic|heif|webp|bmp|tiff?|avif)$/i, '.jpg');
     return new File([blob], name, { type, lastModified: file.lastModified });
   }

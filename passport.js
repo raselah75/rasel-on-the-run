@@ -31,7 +31,7 @@
   section.id = 'rnrPassport';
   section.className = 'section rnr-passport-section';
   section.innerHTML = `
-    <div class="section-heading"><div><p class="eyebrow">PASSPORT</p><h2>My passport stamps</h2><p>One stamp for every country I have stepped into.</p></div></div>
+    <div class="section-heading"><div><p class="eyebrow">PASSPORT</p><h2>My passport stamps</h2><p>One stamp for every country I have stepped into.</p></div><button type="button" class="rnr-owner-pill rnr-pp-add-top" data-pp-add>+ Add a stamp</button></div>
     <div class="rnr-passport">
       <div class="rnr-passport-cover" aria-hidden="true">
         <span class="rnr-pp-top">TRAVEL JOURNAL</span>
@@ -43,7 +43,7 @@
       <div class="rnr-passport-page">
         <div class="rnr-pp-pagehead"><span>VISAS · ভিসা</span><span class="rnr-pp-pageno">07</span></div>
         <div class="rnr-pp-stamps" role="list"></div>
-        <p class="rnr-pp-empty">Mark countries as visited on the globe and a stamp appears here. Only you can see this message.</p>
+        <p class="rnr-pp-empty">No stamps yet. Press "+ Add a stamp", type the country (for example Switzerland) and the date. Only you can see this message.</p>
       </div>
     </div>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -150,7 +150,7 @@
           <button type="button" class="rnr-stamp-open" data-pp-open="${esc(c.name)}" aria-label="${esc(bn() ? `${c.name} দেখুন` : `Open ${c.name}`)}">${stampSVG(c, info)}</button>
           <button type="button" class="rnr-stamp-edit" data-pp-edit="${esc(c.name)}" aria-label="Edit stamp for ${esc(c.name)}">✎</button>
         </div>`;
-      }).join('');
+      }).join('') + `<button type="button" class="rnr-stamp-add" data-pp-add aria-label="Add a passport stamp"><span>+</span><b>Add a stamp</b><small>New country</small></button>`;
       if (seen) grid.querySelectorAll('.rnr-stamp').forEach(s => s.classList.add('is-in'));
     }
     window.RNR_PAGES?.refresh();
@@ -167,6 +167,7 @@
   if (io) io.observe(grid); else seen = true;
 
   section.addEventListener('click', e => {
+    if (e.target.closest('[data-pp-add]') && isAdmin()) { addStamp(); return; }
     const edit = e.target.closest('[data-pp-edit]');
     if (edit && isAdmin()) { editStamp(edit.dataset.ppEdit); return; }
     const open = e.target.closest('[data-pp-open]');
@@ -197,7 +198,88 @@
         if (!write(all)) return false;
         lastKey = ''; render();
       },
-      extraLabel: 'Reset stamp', extra: () => { delete all[name]; write(all); lastKey = ''; render(); }
+      extraLabel: 'Remove stamp', extra: () => {
+        if (!confirm(`Remove the ${name} stamp? ${name} will no longer be shown as visited. Photos are not deleted.`)) return false;
+        delete all[name]; write(all); setVisited(name, false); lastKey = ''; render();
+      }
+    });
+  }
+
+  // ---------- Adding a new stamp ----------
+  const GLOBE_LISTS = 'raselOnTheRunGlobeListsV1';
+  const clean = v => (typeof cleanName === 'function' ? cleanName(v) : String(v || '').toLowerCase().trim());
+  const archive = () => (typeof travelData !== 'undefined' && Array.isArray(travelData) ? travelData : []);
+  function resolveCountry(input) {
+    const text = String(input || '').replace(/^\S*[\u{1F1E6}-\u{1F1FF}]{2}\S*\s*/u, '').trim();
+    if (!text) return null;
+    const own = archive().find(c => clean(c.name) === clean(text));
+    if (own) return own.name;
+    const w = window.RNR_WORLD?.find(text);
+    if (!w) return null;
+    return archive().find(c => clean(c.name) === clean(w.name))?.name || w.name;
+  }
+  function readGlobeLists() {
+    try { const v = JSON.parse(localStorage.getItem(GLOBE_LISTS) || 'null'); if (v && Array.isArray(v.visited)) return { visited: v.visited, wishlist: v.wishlist || [] }; } catch {}
+    const all = window.RNR_GLOBE?.countries() || [];
+    return { visited: all.filter(c => c.visited).map(c => c.name), wishlist: all.filter(c => c.wish).map(c => c.name) };
+  }
+  function setVisited(name, on) {
+    const lists = readGlobeLists();
+    lists.visited = lists.visited.filter(n => clean(n) !== clean(name));
+    lists.wishlist = lists.wishlist.filter(n => clean(n) !== clean(name));
+    if (on) lists.visited.push(name);
+    else archive().forEach(c => { if (clean(c.name) === clean(name)) c.visited = false; });
+    try { localStorage.setItem(GLOBE_LISTS, JSON.stringify(lists)); } catch {}
+    if (!on && typeof saveData === 'function') saveData();
+    window.RNR_GLOBE?.refresh();
+  }
+  function ensureInArchive(name) {
+    if (archive().some(c => clean(c.name) === clean(name))) return;
+    archive().push({ id: typeof createId === 'function' ? createId() : `c${Date.now().toString(36)}`, name, regions: [] });
+    try { if (typeof sortCountries === 'function') sortCountries(); if (typeof saveData === 'function') saveData(); if (typeof renderCountries === 'function') renderCountries(); } catch (error) { console.error(error); }
+  }
+  function addStamp() {
+    const stamped = new Set(visitedCountries().map(c => clean(c.name)));
+    const names = [...new Set([...archive().map(c => c.name), ...(window.RNR_WORLD?.list || []).map(c => c.name)])]
+      .filter(n => !stamped.has(clean(n))).sort((a, b) => a.localeCompare(b));
+    const options = names.map(n => `<option value="${esc(n)}">`).join('');
+    window.RNR_OWNER_FORM?.({ eyebrow: 'PASSPORT STAMP', title: 'Add a new stamp',
+      note: 'The stamp is made from the country name. The country is also marked as visited on the globe and added to your Travel Destinations, so you can upload its photos later.',
+      fields: [
+        { name: 'country', label: 'Country', placeholder: 'Start typing, e.g. Switzerland', extraHTML: `<datalist id="rnrPpCountries">${options}</datalist><span class="rnr-pp-pick" aria-live="polite"></span>`,
+          after: label => {
+            const input = label.querySelector('input'); const pick = label.querySelector('.rnr-pp-pick');
+            input.setAttribute('list', 'rnrPpCountries'); input.autocomplete = 'off';
+            input.addEventListener('input', () => {
+              const name = resolveCountry(input.value);
+              pick.textContent = name ? `${window.RNR_WORLD?.flag(name) || (typeof getCountryFlag === 'function' ? getCountryFlag(name) : '')} ${name}${stamped.has(clean(name)) ? ' — already has a stamp' : ' ✓'}` : (input.value.trim() ? 'Pick a country from the list' : '');
+              pick.classList.toggle('is-ok', Boolean(name));
+            });
+          } },
+        { name: 'date', label: 'Date of arrival', type: 'date', value: '' },
+        { name: 'entry', label: 'Entry point (optional)', value: '', placeholder: 'e.g. Zurich Airport', maxlength: 26 },
+        { name: 'ink', label: 'Ink colour', type: 'select', options: ['Automatic', ...Object.keys(INKS)], value: 'Automatic' },
+        { name: 'shape', label: 'Stamp shape', type: 'select', options: ['Automatic', ...Object.keys(SHAPE_NAMES)], value: 'Automatic' }
+      ],
+      save: d => {
+        const name = resolveCountry(d.country);
+        if (!name) { alert('Please choose a country from the list (for example: Switzerland, Czechia, Belgium).'); return false; }
+        const all = read();
+        const rec = { ...(all[name] || {}) };
+        if (d.date) rec.date = d.date;
+        if (d.entry.trim()) rec.entry = d.entry.trim();
+        if (d.ink !== 'Automatic') rec.ink = d.ink;
+        if (d.shape !== 'Automatic') rec.shape = d.shape;
+        if (Object.keys(rec).length) all[name] = rec;
+        if (!write(all)) return false;
+        ensureInArchive(name);
+        setVisited(name, true);
+        lastKey = ''; seen = true;
+        render().then(() => {
+          const el = [...grid.querySelectorAll('[data-pp-open]')].find(b => b.dataset.ppOpen === name)?.closest('.rnr-stamp');
+          if (el) { el.classList.add('is-new'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.classList.remove('is-new'), 1600); }
+        });
+      }
     });
   }
 
@@ -206,6 +288,9 @@
   addEventListener('rnr:language', () => { lastKey = ''; render(); });
   let lastAdmin = isAdmin();
   new MutationObserver(() => { if (isAdmin() !== lastAdmin) { lastAdmin = isAdmin(); render(); } }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  window.RNR_PASSPORT = { render };
+  window.RNR_PASSPORT = {
+    render, add: addStamp,
+    stampHTML: name => { const c = visitedCountries().find(x => x.name === name); if (!c) return ''; const info = read()[name] || {}; return stampSVG(c, info); }
+  };
   setTimeout(render, 600);
 })();

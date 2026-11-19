@@ -31,7 +31,7 @@
     'Qatar': [25.35, 51.18, 'Asia'], 'Andorra': [42.5, 1.5, 'Europe'], 'Sri Lanka': [7.9, 80.8, 'Asia']
   };
   const norm = value => (typeof cleanName === 'function' ? cleanName(value) : String(value).toLowerCase().trim());
-  const placeOf = name => { const key = Object.keys(PLACES).find(k => norm(k) === norm(name)); return key ? PLACES[key] : null; };
+  const placeOf = name => { const key = Object.keys(PLACES).find(k => norm(k) === norm(name)); if (key) return PLACES[key]; const w = window.RNR_WORLD?.find(name); return w ? [w.lat, w.lng, w.continent] : null; };
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 
   const journeys = () => ((window.RNR_SITE || {}).journeys || []).filter(j => j?.from && j?.to && isFinite(j.from.lat) && isFinite(j.to.lat));
@@ -85,8 +85,8 @@
     // Configured countries that are not in the archive still count and show.
     configured.forEach(key => {
       if (countries.some(c => norm(c.name) === key)) return;
-      const name = Object.keys(PLACES).find(k => norm(k) === key);
-      if (name) countries.push({ id: '', name, flag: '', visited: true, lat: PLACES[name][0], lng: PLACES[name][1], continent: PLACES[name][2] });
+      const name = Object.keys(PLACES).find(k => norm(k) === key) || window.RNR_WORLD?.list.find(w => norm(w.name) === key)?.name;
+      if (name) { const p = placeOf(name); countries.push({ id: '', name, flag: window.RNR_WORLD?.flag(name) || '', visited: true, lat: p[0], lng: p[1], continent: p[2] }); }
     });
     return countries;
   }

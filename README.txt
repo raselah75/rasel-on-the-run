@@ -549,8 +549,9 @@ country-showcase.js, world-clock.js, site-config.js, theme-final.css.
    countries and their photos, cover photo/video, memories, short videos,
    study journey, stories and About Me. Photos are re-saved first, which
    removes hidden GPS/camera information. NOT published: planner, expenses,
-   reservations, encrypted notes, Adventure/Ultimate/Final Journey tools and
-   other private toolkit data. Publish again whenever you add something new.
+   reservations, encrypted notes, the private Adventure/Ultimate/Final
+   Journey records and other private toolkit data (only the cleaned,
+   text-only "My Journey Plan" copy is published). Publish again whenever you add something new.
    Visitors who already have the site open get a "Refresh" message.
    "Download published copy" puts the published content onto a new device.
 
@@ -560,12 +561,15 @@ country-showcase.js, world-clock.js, site-config.js, theme-final.css.
       (Only raselahmmed1520@gmail.com can upload. Change the email in the
       SQL and in site-config.js if you use another one.)
    c. Authentication > Sign In / Providers: make sure Email is enabled.
-   d. Authentication > URL Configuration: set Site URL to your website
-      address (e.g. https://raselontherun.com) and add the same address to
+   d. Authentication > URL Configuration: set Site URL to
+      https://rasel-on-the-run.vercel.app and add the same address to
       Redirect URLs. (For testing on your Mac also add http://localhost:8000)
-   e. Project Settings > API: copy the Project URL and the anon / publishable
-      key into site-config.js (cloud.supabaseUrl, cloud.supabaseAnonKey).
-      Never use the service_role / secret key.
+   e. Press the green "Connect" button at the top of the project (or open
+      Project Settings > API Keys). Copy the Project URL
+      (https://xxxx.supabase.co) and the Publishable key (starts with
+      sb_publishable_…; an older "anon" key starting with eyJ… also works)
+      into site-config.js (cloud.supabaseUrl, cloud.supabaseAnonKey).
+      Never use the Secret key (sb_secret_…) or the service_role key.
    f. Upload the website again (Netlify/Vercel), open it, Admin > Publish.
    g. Optional: after your first sign-in, turn off "Allow new users to sign
       up" in Authentication settings.
@@ -768,3 +772,146 @@ MacBook Pro 16" (1728), desktop (1920) and 4K (2560).
 - Small labels and intro text grow with the screen, so nothing is tiny.
 - Big monitors and MacBooks: pages use more of the screen with larger text,
   and photo / food / 360° / stamp grids get bigger cards.
+
+MY JOURNEY PLAN (new public page) + TIDY MY TOOLKIT (17 November 2026)
+- New menu item "My Journey Plan" (after Study Journey). Visitors see your
+  trips, plans and adventures as cards, text only, no photos:
+    Plans: Journey Itinerary, Smart Trip Planner
+    Trips: Epic Road Trips, Travel Routes, Camping
+    Adventures: Adventure Activities, Mountain & Hiking, Trail Database,
+                Challenges & Achievements
+    Nature & places: Hidden Places, National Parks & Waterfalls, Wildlife,
+                Sunrise & Sunset
+  The nearest upcoming trip is shown at the top with a day countdown.
+  You still add and edit them in My Toolkit (links at the top of the page
+  in Admin mode). Press Publish so visitors see them.
+  NEVER shown: expenses, wallet, budgets, reservations, safety / emergency
+  numbers, journals, GPS tracks. Only the fields shown on the cards are
+  published (key raselOnTheRunJourneyPlanPublicV1).
+- My Toolkit: removed (hidden) "My Travel Studio", "Stories Behind the
+  Places", "Make the memories easier to revisit" and every photo / video
+  tool inside the other sections. The files are kept, nothing else breaks.
+- Fixes: old world map in My Toolkit was grey (the photo watermark was
+  wrapping map tiles; maps are now excluded), old "Interactive 3D World"
+  no longer flips flat, the activity log no longer repeats "Admin mode
+  opened".
+
+HOME PAGE POLISH + JOURNEY PLAN BOXES (18 November 2026)
+- Visitors no longer see "My Media Library" (photo counts / storage) or the
+  old "My Short Videos" uploader; you still see both in Admin mode.
+- Phones: country cards two side by side; "Choose a country…" line aligned.
+- Floating buttons: smaller on phones, ↑ appears only after scrolling,
+  ← is not shown on Home; the duplicate old ↑ button was removed.
+- Few photos (1–4) are shown bigger and centred.
+- My Journey Plan: each category (Plans, Trips, Adventures, Nature &
+  places) is its own coloured box with an icon, a short line and a count.
+
+
+MY BANGLADESH MAP, PAGE ANIMATION, LOST / OFFLINE PAGES (18 November 2026)
+- Travel Destinations > "My Bangladesh": a hexagon map of all 64 districts,
+  coloured by division. A district lights up automatically when you have
+  Bangladesh photos from a town in it (Kuakata counts for Patuakhali,
+  Saint Martin's / Teknaf for Cox's Bazar, Savar for Dhaka, Sreemangal for
+  Moulvibazar). In Admin mode tap a district > "Mark as visited" for places
+  you visited without photos. Shows "X of 64", division totals, and an
+  "Open photos" button. Visitors see it only when at least one district is
+  lit. Saved in raselOnTheRunDistrictsV1 (published). New file:
+  district-map.js.
+- Page changes now fade and rise in softly (switched off for people who
+  turn on "reduce motion" on their device).
+- 404.html: a friendly "This road doesn't lead anywhere" page for wrong
+  addresses (Vercel and Netlify use it automatically). A wrong link inside
+  the site (#something) goes to Home with a short note.
+- offline.html: "No signal out here" page when there is no internet and the
+  site was never opened before on that device; it reloads itself when the
+  connection comes back. Offline cache version: shell-v23.
+- Publish: works with Supabase's new "Publishable" keys (sb_publishable_…).
+  Setup steps above (PUBLISH TO THE WEB – ONE-TIME SETUP) were updated.
+
+PASSPORT: ADD A STAMP FOR ANY COUNTRY (18 November 2026)
+- Admin mode > Travel Destinations > "My passport stamps":
+  press "+ Add a stamp" (top right of the section, or the dashed round
+  "Add a stamp" tile after the last stamp). Type the country (a list of all
+  ~195 countries appears; "Czech Republic", "Turkey", "UK", "USA" also work),
+  choose the arrival date, optional entry point, ink colour and shape, Save.
+- The stamp is drawn with that country's name. The country is also marked
+  as visited on the globe, and added to Travel Destinations (if it was not
+  there) so you can upload its photos.
+- ✎ on a stamp: change date / entry / colour / shape, or "Remove stamp"
+  (the country stops counting as visited; photos are kept).
+- New file: world-countries.js (all countries with flags and globe
+  positions). Offline cache version: shell-v24.
+
+SEVEN BIG FEATURES (18 November 2026)
+1. GET THE APP (pwa-install.js, manifest.webmanifest, icon-*.png)
+   - Footer button "Get the app" and the same button inside the phone menu.
+   - Android / Chrome / Edge: the browser's own Install window opens.
+   - iPhone / iPad: a 3-step picture guide (Share > Add to Home Screen > Add).
+     Mac Safari: File > Add to Dock.
+   - Phones: a small one-time invitation from the 2nd visit (45 days pause
+     after "✕"). Opened from the home screen it runs full screen.
+2. SMART SEARCH (smart-search.js) — ⌕ Search or Ctrl/⌘ + K
+   - Finds pages, sections, countries (also by Bangla name: "জাপান"),
+     divisions / states, cities, all 64 districts (English or Bangla),
+     stories, food, videos, trip routes, journey plans, study entries and
+     year recaps. ↑ ↓ Enter work on the keyboard.
+3. ADD PHOTOS — FIND THE PLACE FOR ME (smart-upload.js, Admin mode)
+   - "Add Photos" (top menu) > "Find the place for me" > pick many photos.
+   - Each photo's own date and GPS are read on your device; the place name
+     is looked up online (BigDataCloud, only the coordinates are sent).
+   - Photos are grouped by place; you check / change country, division and
+     city before saving. New cities and countries are added for you.
+   - GPS is removed: every photo that had a location is re-saved without it.
+   - iPhone tip: in the photo picker tap Options and turn Location on.
+   - Photos without GPS: choose the place by hand or put in My Memories.
+4. COUNTRY STORY (country-story.js)
+   - Tap a passport stamp, a country in the globe list, a country in search,
+     or the "<Country> — my story" button inside a country.
+   - Cover photo, flag, Bangla name, first arrival, numbers, the passport
+     stamp, best photos, places, month-by-month timeline, stories, food,
+     plans, and "Browse all photos".
+5. YEAR RECAP (year-recap.js)
+   - Timeline page > "▶ Play my 2024 recap" (also in search).
+   - Story-style slides: numbers, first-time countries, top place, busiest
+     month, best moments, taste of the year, goodbye + "Save as picture"
+     (1080×1920 PNG). Tap right/left, hold to pause, swipe down to close.
+6. GUESTBOOK (guestbook.js, About Me page)
+   - Visitors leave a note (name, from, message). It appears only after you
+     approve it: Admin mode + signed in with Publish > "✓ Approve" / Hide /
+     Delete. Bots are filtered; max 3 notes a day per visitor device.
+   - Needs Publish set up. supabase-site.sql now ALSO creates the guestbook
+     table — run the whole file once (running it again is safe).
+   - Visitors do not see the guestbook until Publish is set up.
+7. PUBLISH — still waiting for your Supabase Project URL + Publishable key
+   (see PUBLISH TO THE WEB – ONE-TIME SETUP above).
+Offline cache version: shell-v26.
+
+LOGOS + LOGO ON PHOTOS (18 November 2026)
+- New folder "logos": two logos, each as SVG (sharp at any size) and PNG
+  (2000 px wide, transparent background):
+    logo-rasel-on-the-run(.svg/.png)          – for light backgrounds
+    logo-rasel-on-the-run-white(.svg/.png)    – for dark backgrounds
+    logo-adventure-with-rasel(.svg/.png)      – for light backgrounds
+    logo-adventure-with-rasel-white(.svg/.png)
+    mark-rasel-on-the-run / mark-adventure-with-rasel – square / round icons
+      (profile pictures, YouTube / Instagram / Facebook)
+    watermark-*.svg – small white versions used on photos
+- Logo on photos: when you press "Publish now", a small logo is drawn into
+  the corner of every published photo (travel photos, story pictures,
+  then & now, food diary). 360° views and videos are not changed. Your
+  originals on this device are never changed.
+  Publish > "Logo on photos": on/off, which logo, corner, size, with a
+  live preview. After changing it, publish again.
+- The old "Rasel's Archive" text that floated over some photos is switched
+  off, so there is never a double mark. New file: photo-logo.js.
+Offline cache version: shell-v27.
+
+ARRANGE COUNTRIES — CHECKED (18 November 2026)
+- Tested with a finger (iPhone / Android) and a mouse: both ways work.
+  1) "Arrange countries" opens a list of all countries: hold ⋮⋮ and slide,
+     or use ↑ ↓ ⤒, or "Visited first" / "A → Z", then "Save order".
+  2) "Drag the cards": hold a card's round grip (or press and hold the card)
+     and slide it to its new place.
+- iPhone fix: holding a card no longer opens the "Save image" menu.
+- A note now says the order is saved. The order is saved on THAT device;
+  visitors and your other devices see it after you Publish.

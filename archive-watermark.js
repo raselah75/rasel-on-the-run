@@ -4,9 +4,7 @@
   'use strict';
 
   const MARKUP = `
-    <span class="ra-archive-watermark" aria-label="Rasel's Archive">
-      <span class="ra-archive-wordmark">Rasel's Archive</span>
-    </span>`;
+    <span class="ra-archive-watermark" aria-hidden="true"><span class="ra-archive-logo"></span></span>`;
 
   const style = document.createElement('style');
   style.id = 'ra-archive-watermark-style';
@@ -45,6 +43,8 @@
   function shouldWatermark(media) {
     if (!media || media.dataset.raWatermarked === 'true') return false;
     if (media.closest('[data-no-archive-watermark],.no-archive-watermark')) return false;
+    // Map tiles, globes and full-screen viewers must never be wrapped.
+    if (media.closest('.leaflet-container,.leaflet-pane,.rnr-globe-stage,.rnr-pano-viewer,.rnr-book-overlay,.rnr-viewer,.rnr-player') || media.classList.contains('leaflet-tile')) return false;
     if (!media.closest('main')) return false;
     const src = media.getAttribute('src') || '';
     if (!src && media.tagName === 'IMG') return false;

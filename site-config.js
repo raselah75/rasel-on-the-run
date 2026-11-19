@@ -37,8 +37,10 @@ window.RNR_SITE = {
 
   // Publish to the web (Supabase) -----------------------------------------
   // See "PUBLISH TO THE WEB – ONE-TIME SETUP" in README.txt.
-  // supabaseUrl:      Project Settings > API > Project URL
-  // supabaseAnonKey:  Project Settings > API > anon / publishable key (public, safe here)
+  // supabaseUrl:      the "Connect" button at the top of your Supabase project
+  //                   (or Project Settings > General: https://<Reference ID>.supabase.co)
+  // supabaseAnonKey:  Project Settings > API Keys > Publishable key (sb_publishable_...)
+  //                   An old-style "anon" key (eyJ...) also works. Both are public, safe here.
   // NEVER put the service_role / secret key in this file.
   cloud: {
     supabaseUrl: '',

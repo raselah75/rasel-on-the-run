@@ -76,3 +76,22 @@ UPDATE — 17 NOVEMBER 2026 (seven themed features)
   (desktop + phone), Bangla text, publishing (new data included), and the visitor
   audit: no owner buttons visible anywhere, including the new sections.
 - Removed earlier today: likes, share buttons and per-item links.
+
+
+UPDATE — 18 NOVEMBER 2026 (Bangladesh map, page animation, 404/offline, Publish keys)
+- Added: 64-district Bangladesh hex map (district-map.js), soft page-change animation,
+  404.html and offline.html, wrong-link note, Supabase publishable-key support.
+- Tested: district map (auto + manual marks, open photos, Bangla, dark, phone),
+  page animation, 404/offline pages, header-fix for publish keys, regression suite,
+  visitor audit (no owner buttons visible).
+
+UPDATE — 18 NOVEMBER 2026 (app install, smart search, smart photo upload, country story,
+year recap, guestbook)
+- Tested on desktop 1440 and phone 390 (iPhone + Android user agents): install guide,
+  invitation, home-screen mode; search in English and Bangla; GPS photos (sample JPEGs
+  with GPS) grouped and placed correctly, GPS removed after saving; country story from
+  stamp / globe / search / archive, back button and Esc; recap slides, auto-advance,
+  picture download; guestbook send / honeypot / approve / hide with a simulated Supabase
+  (publishable key sent only as apikey). Visitor audit: no owner buttons.
+- Not testable here (no internet): real BigDataCloud lookups, real Supabase, real install
+  prompt on a phone.

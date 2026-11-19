@@ -23,15 +23,15 @@
   // What is public. Everything else stays on your device.
   const LOCAL_KEYS = ['raselOnTheRunData', 'raselOnTheRunAboutMe', 'raselOnTheRunStudyJourneyV1', 'raselOnTheRunLifetimeDocumentaryV1',
     'raselOnTheRunCountryOrderV1', 'raselOnTheRunRemovedDefaultsV1', 'raselOnTheRunHeroCoverV1', 'raselOnTheRunSiteTextV1', 'raselOnTheRunNextTripV1', 'raselOnTheRunGlobeListsV1',
-    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1'];
+    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1', 'raselOnTheRunJourneyPlanPublicV1', 'raselOnTheRunDistrictsV1', 'raselOnTheRunWatermarkV1'];
   const DATABASES = [
-    { name: 'RaselOnTheRunPhotos', stores: ['photos'] },
+    { name: 'RaselOnTheRunPhotos', stores: ['photos'], logo: true },
     { name: 'RaselOnTheRunDesignAssets', stores: ['assets'] },
     { name: 'RaselOnTheRunShortVideosV1', stores: null },
-    { name: 'RaselOnTheRunLifetimeDocMediaV1', stores: ['media'] },
+    { name: 'RaselOnTheRunLifetimeDocMediaV1', stores: ['media'], logo: true },
     { name: 'RaselOnTheRunFilmsV1', stores: ['films'] },
-    { name: 'RaselOnTheRunThenNowV1', stores: ['pairs'] },
-    { name: 'RaselOnTheRunFoodDiaryV1', stores: ['dishes'] },
+    { name: 'RaselOnTheRunThenNowV1', stores: ['pairs'], logo: true },
+    { name: 'RaselOnTheRunFoodDiaryV1', stores: ['dishes'], logo: true },
     { name: 'RaselOnTheRunPanoramasV1', stores: ['panos'], maxEdge: 6000 }
   ];
 
@@ -43,7 +43,15 @@
   };
   const isOwnerDevice = () => ls.get(OWNER_FLAG) === '1' || Boolean(ls.get(ADMIN_KEY));
   const publicURL = path => `${BASE}/storage/v1/object/public/${BUCKET}/${path.split('/').map(encodeURIComponent).join('/')}`;
-  const headers = (token, extra = {}) => ({ apikey: cfg.supabaseAnonKey, Authorization: `Bearer ${token || cfg.supabaseAnonKey}`, ...extra });
+  // New Supabase keys (sb_publishable_...) go ONLY in the apikey header; the
+  // Authorization header carries the signed-in owner's session token, or the
+  // old-style anon key (a JWT) for projects that still use it.
+  const headers = (token, extra = {}) => {
+    const h = { apikey: cfg.supabaseAnonKey, ...extra };
+    if (token) h.Authorization = `Bearer ${token}`;
+    else if (/^eyJ/.test(cfg.supabaseAnonKey || '')) h.Authorization = `Bearer ${cfg.supabaseAnonKey}`;
+    return h;
+  };
 
   // ------------------------------------------------------------------
   // 1. Sign-in link landing: the email link returns here with tokens.
@@ -236,15 +244,18 @@
   function signOut() { ls.del(SESSION_KEY); }
 
   // Re-save photos without hidden metadata (GPS, camera) and at web size.
-  async function cleanImage(blob, maxEdge = 2400) {
+  async function cleanImage(blob, maxEdge = 2400, withLogo = false) {
     if (!(blob instanceof Blob) || !/^image\/(jpeg|png|webp|heic|heif)/.test(blob.type)) return blob;
     try {
       const bitmap = await createImageBitmap(blob, { imageOrientation: 'from-image' });
       const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
       const canvas = document.createElement('canvas');
       canvas.width = Math.round(bitmap.width * scale); canvas.height = Math.round(bitmap.height * scale);
-      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const ctx2d = canvas.getContext('2d');
+      ctx2d.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
       bitmap.close?.();
+      // Small logo in the corner of published photos (originals stay untouched).
+      if (withLogo && window.RNR_LOGO) { try { await window.RNR_LOGO.stamp(ctx2d, canvas.width, canvas.height); } catch {} }
       const type = blob.type === 'image/png' ? 'image/png' : 'image/jpeg';
       const out = await new Promise(res => canvas.toBlob(res, type, 0.88));
       return out ? (blob.name ? new File([out], blob.name.replace(/\.(heic|heif|webp)$/i, '.jpg'), { type }) : out) : blob;
@@ -285,7 +296,7 @@
             for (const [field, v] of Object.entries(value)) {
               if (!(v instanceof Blob)) continue;
               onStep?.(`Preparing ${spec.name.replace('RaselOnTheRun', '')} ${i + 1}/${values.length}`);
-              const clean = await cleanImage(v, spec.maxEdge);
+              const clean = await cleanImage(v, spec.maxEdge, Boolean(spec.logo) && /^image\//.test(v.type || ''));
               const hash = await digest(clean);
               const path = `media/${safe(spec.name)}/${safe(name)}/${safe(keys[i])}-${safe(field)}-${hash}.${extOf(clean.type)}`;
               files.push({ path, blob: clean });
@@ -397,7 +408,7 @@
     progress(null);
     if (!configured) {
       setStatus('<b>Cloud is not set up yet.</b> Follow “PUBLISH TO THE WEB – ONE-TIME SETUP” in README.txt, then add your Supabase address and public key in <code>site-config.js</code>.', 'warn');
-      setActions([['Close', 'rnr-btn-ghost', closePanel]]);
+      setActions([['Close', 'rnr-btn-ghost', closePanel], ['Logo on photos', 'rnr-btn-ghost', () => window.RNR_LOGO?.settings()]]);
       return;
     }
     setStatus('Checking sign-in…');
@@ -419,6 +430,7 @@
     setStatus(`Signed in as <b>${user.email}</b>${isOwner ? '' : ' — this is not the owner email in site-config.js.'}${lastLine}`, isOwner ? 'ok' : 'warn');
     setActions([
       ['Sign out', 'rnr-btn-ghost', () => { signOut(); openPanel(); }],
+      ['Logo on photos', 'rnr-btn-ghost', () => window.RNR_LOGO?.settings()],
       ['Download published copy', 'rnr-btn-ghost', async () => {
         if (!confirm('Replace the content on THIS device with the published website copy? (Use this on a new phone or laptop.)')) return;
         try { setStatus('Downloading…'); const site = await fetchSite(); if (!site) { setStatus('Nothing has been published yet.', 'warn'); return; }
@@ -454,7 +466,7 @@
   }
 
   // Expose for testing and for other modules.
-  window.RNR_CLOUD = { configured, openPanel, publish, applySnapshot, fetchSite };
+  window.RNR_CLOUD = { configured, openPanel, publish, applySnapshot, fetchSite, base: BASE, headers: (token, extra) => headers(token, extra), session };
 
   // Start
   if (configured && !isOwnerDevice()) visitorSync();

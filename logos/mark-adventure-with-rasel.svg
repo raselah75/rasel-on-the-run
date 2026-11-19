@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Adventure with Rasel"><g transform="translate(100 100) scale(1.0666666666666667)">
+  <defs>
+    <clipPath id="cm"><circle r="76"/></clipPath>
+    <linearGradient id="skym" x1="0" y1="-1" x2="0" y2="1"><stop offset="0" stop-color="#f3b765"/><stop offset=".45" stop-color="#ee8f5e"/><stop offset="1" stop-color="#2a5d6b"/></linearGradient>
+  </defs>
+  <circle r="90" fill="#0f2233"/>
+  <circle r="83" fill="none" stroke="#c9a96e" stroke-width="2" stroke-dasharray="2 5" opacity=".9"/>
+  <g clip-path="url(#cm)">
+    <rect x="-80" y="-80" width="160" height="160" fill="url(#skym)"/>
+    <circle cx="22" cy="-18" r="17" fill="#fff4dc" opacity=".95"/>
+    <path d="M-80 30 L-46 -8 L-28 8 L-6 -22 L22 10 L44 -6 L80 26 V80 H-80Z" fill="#2c7d86"/>
+    <path d="M-80 60 L-30 4 L0 -36 L34 8 L80 52 V80 H-80Z" fill="#1d6b74"/>
+    <path d="M0 -36 L10 -22 L4 -24 L-2 -18 L-7 -24 L-12 -20Z" fill="#fff"/>
+    <path d="M-80 58 L-40 40 L-10 52 L30 36 L80 54 V80 H-80Z" fill="#0f3a44"/>
+    <path d="M-34 70 C-20 52 -40 40 -18 26 S 2 2 -6 -10 S 2 -28 0 -34" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+    <path d="M0 -36 V-58" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M1 -58 L18 -52 L1 -46Z" fill="#e57a4c"/>
+  </g>
+  <circle r="76" fill="none" stroke="#fff" stroke-width="2.4" opacity=".9"/>
+  <path d="M0 -90 L4 -83 L0 -80 L-4 -83Z" fill="#c9a96e"/>
+</g></svg>

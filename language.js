@@ -13,7 +13,7 @@
   const T = {
     // Header, footer, navigation
     'Every Journey Tells a Story.': 'প্রতিটি যাত্রাই একটি গল্প।',
-    'Home': 'হোম', 'Travels': 'ভ্রমণ', 'Travel Destinations': 'ভ্রমণের গন্তব্য', 'Study Journey': 'পড়াশোনার যাত্রা', 'Stories': 'গল্প', 'About': 'আমার কথা',
+    'Home': 'হোম', 'Travels': 'ভ্রমণ', 'Travel Destinations': 'ভ্রমণের গন্তব্য', 'My Journey Plan': 'আমার যাত্রা পরিকল্পনা', 'Trips, plans and adventures — where I have been and where I am going next.': 'ভ্রমণ, পরিকল্পনা আর অ্যাডভেঞ্চার—কোথায় গেছি আর এরপর কোথায় যাচ্ছি।', 'The first plans are being written.': 'প্রথম পরিকল্পনাগুলো লেখা হচ্ছে।', 'Study Journey': 'পড়াশোনার যাত্রা', 'Stories': 'গল্প', 'About': 'আমার কথা',
     'My Toolkit': 'আমার টুলকিট', 'Search': 'খুঁজুন', 'Add Photos': 'ছবি যোগ করুন',
     // Hero + clocks
     'MY PERSONAL TRAVEL JOURNAL': 'আমার ব্যক্তিগত ভ্রমণ-ডায়েরি',
@@ -68,6 +68,12 @@
     'Study memories are on their way.': 'পড়াশোনার স্মৃতিগুলো শিগগিরই আসছে।',
     'The first stories are being written.': 'প্রথম গল্পগুলো লেখা হচ্ছে।',
     'New content is on its way.': 'নতুন কিছু শিগগিরই আসছে।',
+    // Guestbook
+    'GUESTBOOK': 'অতিথি খাতা', 'Leave a note': 'একটি নোট রেখে যান', 'A few words from you — where you are from, a travel tip, or just hello. Notes appear here for everyone.': 'আপনার দুই লাইন — কোথা থেকে এসেছেন, ভ্রমণের কোনো টিপস, বা শুধু হ্যালো। নোটগুলো সবাই এখানে দেখতে পাবে।',
+    'Your name': 'আপনার নাম', 'From (city or country)': 'কোথা থেকে (শহর বা দেশ)', 'Message': 'বার্তা', 'Send message': 'বার্তা পাঠান',
+    "Messages appear after I read them. Please don't share private details.": 'আমি পড়ার পর বার্তা দেখা যাবে। ব্যক্তিগত তথ্য লিখবেন না।',
+    // Bangladesh districts map
+    'MY BANGLADESH': 'আমার বাংলাদেশ', '64 districts, one map': '৬৪ জেলা, একটি মানচিত্র', 'Every district I have been to lights up. Tap one to see its photos.': 'যে জেলাগুলোতে গেছি সেগুলো আলোকিত। ছবি দেখতে যেকোনো জেলায় চাপ দিন।',
     // Passport, routes, 360° views, food diary
     'PASSPORT': 'পাসপোর্ট', 'My passport stamps': 'আমার পাসপোর্টের সিল', 'One stamp for every country I have stepped into.': 'যে দেশেই পা রেখেছি, তার একটি করে সিল।',
     'ON THE ROAD': 'পথে পথে', 'My trip routes': 'আমার ভ্রমণের রুট', 'Pick a trip and watch the route draw itself, stop by stop.': 'একটি ট্রিপ বেছে নিন—রুটটা নিজে নিজে আঁকা হবে, এক স্টপ থেকে আরেক স্টপে।',
@@ -139,7 +145,7 @@
   ];
 
   // Areas that are translated (public pages). Owner tools are skipped.
-  const ROOTS = '.rnr-upload-progress, #rnrPassport, #rnrTripRoutes, #rnrPanoramas, #rnrFood, .rnr-pano-viewer, #rnrVideos, #rnrNextTrip, #rnrBestShots, #rnrThenNow, #rnrPhotoMap, #rnrTimeline, .rnr-player, .site-header, .site-footer, #home, #welcome, #rnrPageBanner, #rnrComingSoon, #rnrGlobe, #destinations, #memories, #rnrStories, #studyJourney, #aboutMeSection, #contact, #rnrReader';
+  const ROOTS = '.rnr-upload-progress, #rnrJourneyPlan, #rnrPassport, #rnrDistricts, #rnrGuestbook, #rnrTripRoutes, #rnrPanoramas, #rnrFood, .rnr-pano-viewer, #rnrVideos, #rnrNextTrip, #rnrBestShots, #rnrThenNow, #rnrPhotoMap, #rnrTimeline, .rnr-player, .site-header, .site-footer, #home, #welcome, #rnrPageBanner, #rnrComingSoon, #rnrGlobe, #destinations, #memories, #rnrStories, #studyJourney, #aboutMeSection, #contact, #rnrReader';
   const SKIP = 'script, style, input, textarea, .rnr-story-excerpt, .rnr-reader-text, .rnr-card-caption, .memory-caption, .rnr-story-body h3, .rnr-reader-head h1, .study-entry-content, .brand-name, .footer-brand, .hierarchy-flag, .rnr-clock-time, .rnr-clock-date, .ltd-section, [data-no-translate]';
   const originals = new WeakMap();
   let lang = 'en';

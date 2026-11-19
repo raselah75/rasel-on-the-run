@@ -373,6 +373,7 @@
     if (opts.plain) head.remove();
     host.append(...(opts.plain ? [grid, sentinel] : [head, grid, sentinel]));
     host.classList.toggle('is-empty', !sorted.length);
+    host.classList.toggle('is-few', sorted.length > 0 && sorted.length <= 4);
 
     function more() {
       const next = current.photos.slice(current.shown, current.shown + PAGE);

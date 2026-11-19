@@ -66,8 +66,9 @@
     if (toolbar.dataset.state !== signature) {
       toolbar.dataset.state = signature;
       toolbar.innerHTML = isAdmin()
-      ? `<button type="button" class="country-order-toggle${enabled ? ' is-on' : ''}" aria-pressed="${enabled}">${enabled ? 'Done arranging' : 'Arrange countries'}</button>
-         ${enabled ? '<button type="button" class="country-order-reset">Reset order</button><span class="country-order-hint">Hold the grip and slide a card to its new place, or use the arrows.</span>' : ''}`
+      ? (enabled
+        ? `<button type="button" class="country-order-toggle is-on" aria-pressed="true">Done arranging</button><button type="button" class="country-order-reset">Reset order</button><span class="country-order-hint">Hold a card (or its grip) and slide it to its new place, or use the arrows.</span>`
+        : `<button type="button" class="country-order-toggle" aria-pressed="false">Arrange countries</button><button type="button" class="country-order-cards">Drag the cards</button>`)
       : '';
     }
 
@@ -161,6 +162,14 @@
     drag.settleUntil = performance.now() + 120;
   }
 
+  function savedNote() {
+    const t = document.createElement('div');
+    t.className = 'rnr-lost-note is-on';
+    t.textContent = window.RNR_CLOUD?.configured ? 'Order saved. Press Publish so visitors see the new order too.' : 'Order saved on this device. Visitors will see it after Publish is set up.';
+    document.body.append(t);
+    setTimeout(() => { t.classList.remove('is-on'); setTimeout(() => t.remove(), 400); }, 4200);
+  }
+
   function endDrag() {
     if (!drag) return;
     cancelAnimationFrame(drag.raf);
@@ -173,14 +182,29 @@
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
     else ghost.animate([{ left: ghost.style.left, top: ghost.style.top }, { left: `${target.left}px`, top: `${target.top}px` }], { duration: 180, easing: 'ease-out' }).onfinish = finish;
     saveCurrentOrder();
+    savedNote();
   }
 
+  let pressTimer = 0, pressStart = null;
   list.addEventListener('pointerdown', event => {
     if (!enabled) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
     const handle = event.target.closest('.country-drag-handle');
-    if (!handle || (event.pointerType === 'mouse' && event.button !== 0)) return;
-    startDrag(event, handle);
+    if (handle) { startDrag(event, handle); return; }
+    // Hold anywhere on a card for a moment to pick it up (like a phone home screen).
+    const shell = event.target.closest('.country-shell');
+    if (!shell || event.target.closest('[data-rnr-move]')) return;
+    pressStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(() => {
+      const grip = shell.querySelector('.country-drag-handle');
+      if (grip && pressStart) startDrag({ pointerId: pressStart.id, clientX: pressStart.x, clientY: pressStart.y, preventDefault() {} }, grip);
+    }, event.pointerType === 'mouse' ? 160 : 380);
   });
+  addEventListener('pointermove', event => {
+    if (pressStart && !drag && Math.hypot(event.clientX - pressStart.x, event.clientY - pressStart.y) > 10) { clearTimeout(pressTimer); pressStart = null; }
+  });
+  addEventListener('pointerup', () => { clearTimeout(pressTimer); pressStart = null; });
   addEventListener('pointermove', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
@@ -195,8 +219,13 @@
   list.addEventListener('click', event => {
     if (event.target.closest('.country-order-toggle')) {
       event.preventDefault(); event.stopImmediatePropagation();
-      enabled = !enabled;
-      decorate();
+      if (enabled) { enabled = false; decorate(); return; }
+      openSheet();
+      return;
+    }
+    if (event.target.closest('.country-order-cards')) {
+      event.preventDefault(); event.stopImmediatePropagation();
+      enabled = true; decorate();
       return;
     }
     if (event.target.closest('.country-order-reset')) {
@@ -222,6 +251,107 @@
       event.preventDefault(); event.stopImmediatePropagation();
     }
   }, true);
+
+  // ----- "Arrange countries" list: every country in one short list -----
+  let sheet = null, rows = [], listDrag = null;
+  const allCountries = () => {
+    const data = typeof travelData !== 'undefined' && Array.isArray(travelData) ? travelData : [];
+    const rank = new Map(readOrder().map((id, i) => [id, i]));
+    return data.map((c, i) => ({ c, i, r: rank.has(c.id) ? rank.get(c.id) : 1e9 })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.c);
+  };
+  const flag = n => (typeof getCountryFlag === 'function' ? getCountryFlag(n) : '');
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  function openSheet() {
+    if (!sheet) {
+      sheet = document.createElement('div');
+      sheet.className = 'rnr-arr';
+      sheet.innerHTML = `<div class="rnr-arr-backdrop" data-arr-close></div><div class="rnr-arr-card" role="dialog" aria-modal="true" aria-labelledby="rnrArrTitle">
+        <div class="rnr-arr-head"><div><p>ARRANGE</p><h3 id="rnrArrTitle">Order of countries</h3></div><button type="button" class="rnr-arr-x" data-arr-close aria-label="Close">✕</button></div>
+        <p class="rnr-arr-help">Hold <b>⋮⋮</b> and slide up or down, or use <b>↑ ↓</b>. <b>⤒</b> sends a country to the top. The first 8 are the ones shown on the Home page.</p>
+        <div class="rnr-arr-quick"><button type="button" data-arr-sort="visited">Visited first</button><button type="button" data-arr-sort="az">A → Z</button><button type="button" data-arr-sort="reset">Original order</button></div>
+        <ol class="rnr-arr-list"></ol>
+        <div class="rnr-arr-foot"><button type="button" class="rnr-arr-cancel" data-arr-close>Cancel</button><button type="button" class="rnr-arr-save" data-arr-save>Save order</button></div>
+      </div>`;
+      document.body.append(sheet);
+      sheet.addEventListener('click', onSheetClick);
+      sheet.addEventListener('pointerdown', onListDown);
+    }
+    rows = allCountries();
+    drawRows();
+    sheet.hidden = false;
+    document.body.classList.add('rnr-modal-open');
+  }
+  function closeSheet() { if (!sheet) return; sheet.hidden = true; document.body.classList.remove('rnr-modal-open'); }
+  function drawRows(focusId) {
+    const ol = sheet.querySelector('.rnr-arr-list');
+    ol.innerHTML = rows.map((c, i) => `<li data-id="${esc(c.id)}"${i === 7 ? ' class="is-cut"' : ''}>
+      <button type="button" class="rnr-arr-grip" aria-label="Drag ${esc(c.name)}">⋮⋮</button>
+      <span class="rnr-arr-n">${i + 1}</span><span class="rnr-arr-flag" aria-hidden="true">${esc(flag(c.name))}</span><span class="rnr-arr-name">${esc(c.name)}</span>
+      <span class="rnr-arr-btns"><button type="button" data-arr-top aria-label="Move ${esc(c.name)} to the top"${i === 0 ? ' disabled' : ''}>⤒</button><button type="button" data-arr-move="-1" aria-label="Move ${esc(c.name)} up"${i === 0 ? ' disabled' : ''}>↑</button><button type="button" data-arr-move="1" aria-label="Move ${esc(c.name)} down"${i === rows.length - 1 ? ' disabled' : ''}>↓</button></span>
+    </li>`).join('');
+    if (focusId) ol.querySelector(`li[data-id="${CSS.escape(focusId)}"]`)?.scrollIntoView({ block: 'nearest' });
+  }
+  function onSheetClick(e) {
+    if (e.target.closest('[data-arr-close]')) { closeSheet(); return; }
+    if (e.target.closest('[data-arr-save]')) {
+      writeOrder(rows.map(c => c.id));
+      closeSheet();
+      renderCountries();
+      savedNote();
+      return;
+    }
+    const sort = e.target.closest('[data-arr-sort]')?.dataset.arrSort;
+    if (sort) {
+      const data = typeof travelData !== 'undefined' ? travelData : [];
+      if (sort === 'az') rows.sort((a, b) => a.name.localeCompare(b.name));
+      if (sort === 'reset') rows = data.slice();
+      if (sort === 'visited') {
+        const v = new Set((window.RNR_GLOBE?.countries() || []).filter(c => c.visited).map(c => c.name));
+        rows = [...rows.filter(c => v.has(c.name)), ...rows.filter(c => !v.has(c.name))];
+      }
+      drawRows(); return;
+    }
+    const li = e.target.closest('li[data-id]'); if (!li) return;
+    const i = rows.findIndex(c => c.id === li.dataset.id);
+    if (e.target.closest('[data-arr-top]')) { rows.unshift(...rows.splice(i, 1)); drawRows(li.dataset.id); sheet.querySelector('.rnr-arr-list').scrollTop = 0; return; }
+    const step = Number(e.target.closest('[data-arr-move]')?.dataset.arrMove || 0);
+    if (step && rows[i + step]) { [rows[i], rows[i + step]] = [rows[i + step], rows[i]]; drawRows(li.dataset.id); sheet.querySelector(`li[data-id="${CSS.escape(li.dataset.id)}"] [data-arr-move="${step}"]`)?.focus(); }
+  }
+  function onListDown(e) {
+    const grip = e.target.closest('.rnr-arr-grip'); if (!grip) return;
+    e.preventDefault();
+    const li = grip.closest('li');
+    const ol = li.parentElement;
+    listDrag = { li, ol, id: e.pointerId, y: e.clientY, startTop: li.offsetTop };
+    li.classList.add('is-dragging');
+    try { grip.setPointerCapture(e.pointerId); } catch {}
+    if (navigator.vibrate) { try { navigator.vibrate(10); } catch {} }
+  }
+  addEventListener('pointermove', e => {
+    if (!listDrag || e.pointerId !== listDrag.id) return;
+    e.preventDefault();
+    const { li, ol } = listDrag;
+    const box = ol.getBoundingClientRect();
+    // Scroll the list when the finger nears its top or bottom.
+    if (e.clientY < box.top + 40) ol.scrollTop -= 12; else if (e.clientY > box.bottom - 40) ol.scrollTop += 12;
+    const others = [...ol.children].filter(x => x !== li);
+    const target = others.find(x => { const r = x.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; });
+    if (target) { if (li.nextElementSibling !== target) target.before(li); } else if (ol.lastElementChild !== li) ol.append(li);
+  }, { passive: false });
+  const endListDrag = e => {
+    if (!listDrag || (e && e.pointerId !== listDrag.id)) return;
+    const ids = [...listDrag.ol.children].map(x => x.dataset.id);
+    const id = listDrag.li.dataset.id;
+    listDrag.li.classList.remove('is-dragging');
+    listDrag = null;
+    const byId = new Map(rows.map(c => [c.id, c]));
+    rows = ids.map(x => byId.get(x)).filter(Boolean);
+    drawRows(id);
+  };
+  addEventListener('pointerup', endListDrag);
+  addEventListener('pointercancel', endListDrag);
+  document.addEventListener('touchmove', event => { if (listDrag) event.preventDefault(); }, { passive: false });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && sheet && !sheet.hidden) closeSheet(); });
 
   const originalRender = renderCountries;
   renderCountries = function (...args) {

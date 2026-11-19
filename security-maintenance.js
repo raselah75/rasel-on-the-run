@@ -67,7 +67,7 @@
   let idleTimer; const resetIdle=()=>{clearTimeout(idleTimer);if(document.body.classList.contains('admin-mode'))idleTimer=setTimeout(()=>{document.body.classList.remove('admin-mode');document.getElementById('ownerAdminToggle')?.replaceChildren(document.createTextNode('Admin'));audit('Admin auto-locked','30 minutes of inactivity');reveal();},30*60*1000);};
   ['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,resetIdle,{passive:true}));
   // 3) Audit admin unlock/lock and reflect the maintenance panel state.
-  const observer=new MutationObserver(()=>{const active=document.body.classList.contains('admin-mode');if(active){audit('Admin mode opened','Local browser session');resetIdle();}else{clearTimeout(idleTimer);audit('Admin mode locked','Local browser session');}reveal();});
+  let lastActive=document.body.classList.contains('admin-mode');const observer=new MutationObserver(()=>{const active=document.body.classList.contains('admin-mode');if(active===lastActive)return;lastActive=active;if(active){audit('Admin mode opened','Local browser session');resetIdle();}else{clearTimeout(idleTimer);audit('Admin mode locked','Local browser session');}reveal();});
   function init(){addStyles();renderPanel();observer.observe(document.body,{attributes:true,attributeFilter:['class']});reveal();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

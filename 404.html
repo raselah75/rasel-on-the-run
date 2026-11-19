@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0f2233">
+  <title>Lost on the road · Rasel On the Run</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect x=%222%22 y=%222%22 width=%2260%22 height=%2260%22 rx=%2218%22 fill=%22%230f2233%22/%3E%3Ccircle cx=%2244%22 cy=%2220%22 r=%226%22 fill=%22%23f08a5d%22/%3E%3Cpath d=%22M8 50 24 28l8 11 7-8 17 19Z%22 fill=%22%231d6b74%22/%3E%3Cpath d=%22M21 46V20h9.5a7 7 0 0 1 0 14H21m8 0 9 12%22 fill=%22none%22 stroke=%22white%22 stroke-width=%224.2%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+  <script>try{if(localStorage.getItem('raselOnTheRunThemeModeV1')==='dark')document.documentElement.classList.add('dark');if(localStorage.getItem('raselOnTheRunLanguageV1')==='bn')document.documentElement.lang='bn';}catch(e){}</script>
+  <style>
+    :root { --ink:#0f2233; --muted:#5b6b78; --paper:#fffaf3; --bg1:#fff4e6; --bg2:#e6f2f1; --sun:#ee8456; --teal:#1d6b74; --road:#33475b; }
+    html.dark { --ink:#eef4f7; --muted:#9fb0bd; --paper:#0f1c28; --bg1:#071019; --bg2:#0d2230; --road:#5d7488; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; }
+    body { min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:24px; font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif; color:var(--ink); background:radial-gradient(1200px 600px at 80% -10%, var(--bg2), transparent 60%), linear-gradient(180deg, var(--bg1), var(--paper)); -webkit-text-size-adjust:100%; }
+    main { width:min(640px,100%); text-align:center; }
+    .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; font-weight:800; letter-spacing:.02em; margin-bottom:18px; }
+    .brand img { width:34px; height:34px; }
+    svg.scene { width:min(420px,100%); height:auto; display:block; margin:0 auto 10px; }
+    .code { display:inline-block; padding:6px 14px; border-radius:99px; background:color-mix(in srgb,var(--sun) 16%,transparent); color:var(--sun); font-weight:800; letter-spacing:.14em; font-size:13px; text-transform:uppercase; }
+    h1 { margin:14px 0 10px; font-size:clamp(28px,6vw,44px); line-height:1.1; }
+    p { margin:0 auto 26px; max-width:46ch; color:var(--muted); font-size:clamp(15px,2.4vw,18px); line-height:1.6; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+    .actions a { display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:99px; font-weight:800; text-decoration:none; font-size:15px; }
+    .primary { background:var(--ink); color:var(--paper); box-shadow:0 10px 24px rgba(15,34,51,.2); }
+    .ghost { color:var(--ink); border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent); }
+    .car { animation:drive 3.2s ease-in-out infinite alternate; }
+    .dash { stroke-dasharray:14 12; animation:road 1s linear infinite; }
+    @keyframes drive { from { transform:translateX(-8px); } to { transform:translateX(8px); } }
+    @keyframes road { to { stroke-dashoffset:-26; } }
+    @media (prefers-reduced-motion: reduce) { .car,.dash { animation:none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="brand" href="/"><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect x=%222%22 y=%222%22 width=%2260%22 height=%2260%22 rx=%2218%22 fill=%22%230f2233%22/%3E%3Ccircle cx=%2244%22 cy=%2220%22 r=%226%22 fill=%22%23f08a5d%22/%3E%3Cpath d=%22M8 50 24 28l8 11 7-8 17 19Z%22 fill=%22%231d6b74%22/%3E%3Cpath d=%22M21 46V20h9.5a7 7 0 0 1 0 14H21m8 0 9 12%22 fill=%22none%22 stroke=%22white%22 stroke-width=%224.2%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E" alt=""><span>Rasel On the Run</span></a>
+    <svg class="scene" viewBox="0 0 420 220" aria-hidden="true">
+      <circle cx="320" cy="62" r="30" fill="var(--sun)" opacity=".9"/>
+      <path d="M0 150 70 92l46 38 58-62 76 82 50-40 120 60v50H0Z" fill="var(--teal)" opacity=".22"/>
+      <path d="M0 168 90 120l60 34 70-52 90 78 110-30v70H0Z" fill="var(--teal)" opacity=".38"/>
+      <path d="M150 220 196 150h28l46 70Z" fill="var(--road)"/>
+      <path class="dash" d="M210 154 210 220" stroke="#fff" stroke-width="4" fill="none" opacity=".8"/>
+      <g transform="translate(232 120)"><rect x="0" y="0" width="5" height="44" fill="var(--road)"/><path d="M5 2h58l12 11-12 11H5Z" fill="var(--sun)"/><text x="34" y="17" font-size="11" font-weight="800" text-anchor="middle" fill="#fff">?</text></g>
+      <g class="car" transform="translate(0 0)"><g transform="translate(150 176)"><rect x="0" y="6" width="44" height="16" rx="6" fill="var(--ink)"/><path d="M8 7 15 0h15l7 7Z" fill="var(--ink)"/><circle cx="11" cy="23" r="5" fill="var(--road)"/><circle cx="33" cy="23" r="5" fill="var(--road)"/></g></g>
+    </svg>
+    <span class="code">404</span>
+    <h1 data-bn="এই রাস্তা কোথাও যায় না">This road doesn't lead anywhere</h1>
+    <p data-bn="আপনি যে পাতাটি খুঁজছেন সেটি মানচিত্রের বাইরে চলে গেছে। হয়তো লিংকটি পুরোনো, বা পথে কোনো অক্ষর হারিয়ে গেছে।">The page you were looking for has wandered off the map. Maybe the link is old, or a letter went missing on the way.</p>
+    <div class="actions"><a class="primary" href="/" data-bn="হোমে ফিরে চলুন">Take me home →</a><a class="ghost" href="/#travels" data-bn="ভ্রমণের গন্তব্য">Travel Destinations</a></div>
+  </main>
+  <script>
+    if (document.documentElement.lang === 'bn') document.querySelectorAll('[data-bn]').forEach(el => { const arrow = el.textContent.includes('→') ? ' →' : ''; el.textContent = el.dataset.bn + arrow; });
+    
+  </script>
+</body>
+</html>

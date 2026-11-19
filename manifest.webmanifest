@@ -1,0 +1,24 @@
+{
+  "name": "Rasel On the Run",
+  "short_name": "Rasel Travels",
+  "description": "Travels, study journey and stories of Rasel Ahmmed.",
+  "id": "/",
+  "start_url": "/?source=app#home",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f2233",
+  "theme_color": "#0f2233",
+  "lang": "en",
+  "categories": ["travel", "photo", "lifestyle"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Travel Destinations", "short_name": "Travels", "url": "/?source=app#travels", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Stories", "url": "/?source=app#stories", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "My Journey Plan", "short_name": "Plans", "url": "/?source=app#plan", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+  ]
+}

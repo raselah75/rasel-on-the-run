@@ -171,7 +171,7 @@ function escapeHTML(value) {
 
 function getCountryFlag(name) {
   const country = travelData?.find(item => item.name === name);
-  return country?.customFlag || countryFlags[name] || "🏳️";
+  return country?.customFlag || countryFlags[name] || window.RNR_WORLD?.flag(name) || "🏳️";
 }
 
 function cleanName(name) {
