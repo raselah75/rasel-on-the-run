@@ -120,9 +120,7 @@
     try { L = await loadLeaflet(); } catch (error) { section.classList.add('is-offline'); console.warn(error.message); return false; }
     const el = section.querySelector('.rnr-route-map');
     map = L.map(el, { scrollWheelZoom: false, dragging: !matchMedia('(pointer: coarse)').matches, worldCopyJump: false, zoomControl: true }).setView([35, 20], 2);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', subdomains: 'abcd', maxZoom: 19
-    }).addTo(map);
+    window.RNR_TILES.add(L, map);
     section.querySelector('.rnr-map-unlock').addEventListener('click', () => { map.dragging.enable(); map.scrollWheelZoom.enable(); section.classList.add('is-unlocked'); });
     section.classList.add('is-ready');
     return true;

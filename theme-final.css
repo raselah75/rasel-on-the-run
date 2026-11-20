@@ -1947,3 +1947,164 @@ html.rnr-dark .rnr-arr-btns button, html.rnr-dark .rnr-arr-x { background: rgba(
 html body #countryList .rnr-arranging, html body #countryList .rnr-arranging * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 html body #countryList .rnr-arranging img { -webkit-user-drag: none; pointer-events: none; }
 .rnr-arr-list li, .rnr-arr-list li * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+
+/* Map tiles (OpenStreetMap): soft dark version in dark mode */
+html.rnr-dark .leaflet-tile.rnr-map-tiles, html.rnr-dark .rnr-map-tiles .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7); }
+html.rnr-dark .leaflet-container { background: #1b2a35; }
+
+/* =====================================================================
+   MENU ON LAPTOPS / DESKTOPS (when the links do not fit on one row):
+   a neat floating panel on the right instead of a full-width list.
+   ===================================================================== */
+@media (min-width: 701px) {
+  html body .site-header { position: sticky; }
+  html body .site-header.rnr-menu-open .main-nav,
+  html body .site-header.rnr-nav-collapse.rnr-menu-open .main-nav {
+    position: absolute !important; top: calc(100% + 8px); right: clamp(16px, 2.6vw, 48px); left: auto !important;
+    width: min(360px, calc(100vw - 32px)) !important; max-height: calc(100dvh - 120px); overflow: auto; overscroll-behavior: contain;
+    padding: 10px !important; gap: 2px !important; align-items: stretch !important;
+    background: #0f2233 !important; border: 1px solid rgba(255,255,255,.1); border-radius: 22px;
+    box-shadow: 0 24px 60px rgba(4,10,16,.45); z-index: 1200; animation: rnrMenuIn .22s cubic-bezier(.2,.8,.2,1);
+  }
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link,
+  html body .site-header.rnr-menu-open .main-nav > button,
+  html body .site-header.rnr-menu-open .main-nav .owner-corner-controls > button {
+    align-items: center; justify-content: flex-start !important; text-align: left !important;
+    width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 0 !important; border-bottom: 0 !important;
+    font-size: 15px !important; font-weight: 600 !important; color: #e8eef2 !important; background: transparent !important; box-shadow: none !important;
+    letter-spacing: 0 !important; text-transform: none !important; align-self: stretch !important;
+  }
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link::after,
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link::before { display: none !important; }
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link:hover,
+  html body .site-header.rnr-menu-open .main-nav > button:hover { background: rgba(255,255,255,.07) !important; }
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link.is-active { background: rgba(243,183,101,.14) !important; color: #f3b765 !important; display: flex; }
+  html body .site-header.rnr-menu-open .main-nav > a.rnr-nav-link.is-active::before { content: ''; display: block !important; position: static; width: 6px; height: 6px; margin-right: 10px; border-radius: 50%; background: #f3b765; }
+  /* Owner buttons: a small group at the bottom of the panel */
+  html body .site-header.rnr-menu-open .main-nav #uploadNavButton { margin-top: 8px; background: var(--rnr-grad-sun) !important; color: #1a1408 !important; font-weight: 800 !important; }
+  html body .site-header.rnr-menu-open .main-nav #rnrPublishButton { background: rgba(92,192,201,.16) !important; color: #7fd3da !important; font-weight: 800 !important; margin-top: 4px; }
+  html body .site-header.rnr-menu-open .main-nav #ownerAdminToggle { margin-top: 4px; color: #ffb4a8 !important; font-weight: 800 !important; }
+  html body .site-header.rnr-menu-open .main-nav .owner-corner-controls { display: block !important; width: 100%; margin: 0 !important; }
+  html body .site-header.rnr-menu-open .main-nav .rnr-app-menu-btn:not([hidden]) { margin-top: 8px !important; border: 1.5px dashed rgba(243,183,101,.4) !important; color: #f3b765 !important; }
+}
+@keyframes rnrMenuIn { from { opacity: 0; transform: translateY(-8px) scale(.98); } }
+
+/* =====================================================================
+   DESKTOP / LAPTOP HEADER: links always visible at the top (no ☰ menu).
+   If everything fits, one row. If not (Admin mode, Bangla, smaller
+   laptop), the links move to a second row under the logo.
+   Phones and small tablets (≤ 900px) keep the ☰ menu.
+   ===================================================================== */
+@media (min-width: 901px) {
+  html body #rnrMobileToggle { display: none !important; }
+  html body .site-header .main-nav .rnr-app-menu-btn { display: none !important; }
+}
+@media (min-width: 901px) and (max-width: 1359px) {
+  html body .site-header { flex-wrap: wrap !important; row-gap: 6px !important; }
+  html body .site-header .main-nav,
+  html body .site-header.rnr-menu-open .main-nav {
+    display: flex !important; position: static !important; order: 3; width: 100% !important; max-height: none; overflow: visible;
+    flex-direction: row !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important;
+    gap: 4px 6px !important; padding: 4px 0 8px !important; background: transparent !important; border: 0 !important; box-shadow: none !important; animation: none !important;
+  }
+}
+@media (min-width: 1360px) {
+  html body .site-header.rnr-nav-collapse .main-nav,
+  html body .site-header.rnr-nav-collapse.rnr-menu-open .main-nav {
+    display: flex !important; position: static !important; order: 3; width: 100% !important; max-height: none; overflow: visible;
+    flex-direction: row !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important;
+    gap: 4px 8px !important; padding: 4px 0 8px !important; background: transparent !important; border: 0 !important; box-shadow: none !important; animation: none !important;
+  }
+}
+@media (min-width: 901px) and (max-width: 1359px) {
+  html body .site-header .main-nav > a.rnr-nav-link,
+  html body .site-header .main-nav > button,
+  html body .site-header .main-nav .owner-corner-controls > button { width: auto !important; padding: 8px 12px !important; font-size: 14px !important; border-radius: 99px !important; align-self: center !important; text-align: center !important; }
+  html body .site-header .main-nav > a.rnr-nav-link.is-active { background: rgba(243,183,101,.14) !important; color: #f3b765 !important; }
+  html body .site-header .main-nav > a.rnr-nav-link.is-active::before, html body .site-header .main-nav > a.rnr-nav-link.is-active::after { display: none !important; }
+}
+@media (min-width: 1360px) {
+  html body .site-header.rnr-nav-collapse .main-nav > a.rnr-nav-link,
+  html body .site-header.rnr-nav-collapse .main-nav > button,
+  html body .site-header.rnr-nav-collapse .main-nav .owner-corner-controls > button { width: auto !important; padding: 8px 14px !important; font-size: 14.5px !important; border-radius: 99px !important; align-self: center !important; text-align: center !important; }
+  html body .site-header.rnr-nav-collapse .main-nav > a.rnr-nav-link.is-active { background: rgba(243,183,101,.14) !important; color: #f3b765 !important; }
+  html body .site-header.rnr-nav-collapse .main-nav > a.rnr-nav-link.is-active::before, html body .site-header.rnr-nav-collapse .main-nav > a.rnr-nav-link.is-active::after { display: none !important; }
+}
+/* My Toolkit is no longer in the header — open it from My Journey Plan > "All my tools" */
+html body .site-header .main-nav a.rnr-nav-link[data-page="toolkit"] { display: none !important; }
+html body .rnr-plan-owner a.rnr-plan-alltools { background: rgba(243,183,101,.16) !important; color: #c46a1f !important; }
+html.rnr-dark body .rnr-plan-owner a.rnr-plan-alltools { color: #f3b765 !important; }
+@media (min-width: 901px) { html body .site-header.rnr-nav-collapse #rnrMobileToggle, html body .site-header #rnrNavTools #rnrMobileToggle { display: none !important; } }
+/* "Add Photos" removed from the header: photos are added inside each city
+   (Travel Destinations > country > division > city > Upload Photos) or with
+   "Add Your Memories" in My Memories. */
+html body .site-header #uploadNavButton { display: none !important; }
+
+/* =====================================================================
+   ABOUT THIS PLACE — box on every country / state / city page
+   ===================================================================== */
+html body #countryList .rnr-place-box { --pb: #1d6b74; grid-column: 1 / -1; margin: 6px 0 26px; padding: clamp(18px, 2.6vw, 30px); border-radius: 26px; background: linear-gradient(135deg, color-mix(in srgb, var(--pb) 9%, #fffaf3), #fffaf3 60%); border: 1px solid color-mix(in srgb, var(--pb) 22%, transparent); box-shadow: 0 14px 40px rgba(15,34,51,.08); color: #0f2233; font-family: var(--rnr-font, system-ui); animation: rnrRcUp .45s ease both; }
+html body #countryList .rnr-place-box.is-region { --pb: #c0662a; }
+html body #countryList .rnr-place-box.is-city { --pb: #3f6fb0; }
+.rnr-pb-head { display: flex; align-items: center; gap: 14px; }
+.rnr-pb-flag { font-size: 40px; line-height: 1; flex: none; }
+.rnr-pb-head > div { flex: 1; min-width: 0; }
+.rnr-pb-eyebrow { margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .16em; color: var(--pb); }
+html body #countryList .rnr-pb-head h3 { margin: 2px 0 0; font-size: clamp(22px, 3vw, 30px); color: #0f2233; }
+.rnr-pb-edit { flex: none; }
+.rnr-pb-note { margin: 16px 0 0; padding: 14px 16px; border-left: 4px solid var(--pb); border-radius: 0 14px 14px 0; background: rgba(255,255,255,.7); font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+.rnr-pb-desc { margin: 14px 0 0; color: #3d4f5c; line-height: 1.6; font-size: 15.5px; max-width: 80ch; }
+.rnr-pb-grid { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 10px; }
+.rnr-pb-grid li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #fff; border: 1px solid rgba(15,34,51,.07); }
+.rnr-pb-ico { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: color-mix(in srgb, var(--pb) 12%, #fff); color: var(--pb); }
+.rnr-pb-ico svg { width: 22px; height: 22px; }
+.rnr-pb-grid li > div { display: grid; gap: 1px; min-width: 0; }
+.rnr-pb-grid small { font-size: 12px; font-weight: 700; color: #6a7883; text-transform: uppercase; letter-spacing: .06em; }
+.rnr-pb-grid b { font-size: 17px; color: #0f2233; overflow-wrap: anywhere; }
+.rnr-pb-grid em { font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--pb); }
+.rnr-pb-loading, .rnr-pb-miss { margin: 14px 0 0; font-size: 14px; color: #6a7883; }
+.rnr-pb-loading::before { content: ''; display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: -1px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: rnrSpin .8s linear infinite; }
+@keyframes rnrSpin { to { transform: rotate(360deg); } }
+.rnr-pb-only { display: none; }
+body.admin-mode .rnr-pb-only { display: inline; }
+.rnr-pb-src { margin: 14px 0 0; font-size: 12.5px; color: #7b8994; }
+.rnr-pb-src a { color: inherit; text-decoration: underline; }
+html.rnr-dark body #countryList .rnr-place-box { background: linear-gradient(135deg, color-mix(in srgb, var(--pb) 16%, #10202d), #10202d 60%); color: #eef4f7; border-color: rgba(255,255,255,.1); }
+html.rnr-dark body #countryList .rnr-pb-head h3, html.rnr-dark .rnr-pb-grid b { color: #eef4f7; }
+html.rnr-dark .rnr-pb-grid li { background: #152837; border-color: rgba(255,255,255,.06); }
+html.rnr-dark .rnr-pb-ico { background: color-mix(in srgb, var(--pb) 25%, #152837); color: color-mix(in srgb, var(--pb) 55%, #fff); }
+html.rnr-dark .rnr-pb-note { background: rgba(255,255,255,.05); }
+html.rnr-dark .rnr-pb-desc { color: #b9c7d1; }
+html.rnr-dark .rnr-pb-eyebrow, html.rnr-dark .rnr-pb-grid em { color: color-mix(in srgb, var(--pb) 55%, #fff); }
+@media (max-width: 560px) { .rnr-pb-head { flex-wrap: wrap; } .rnr-pb-grid { grid-template-columns: 1fr 1fr; } .rnr-pb-grid li { padding: 10px; gap: 8px; } .rnr-pb-ico { width: 34px; height: 34px; } .rnr-pb-grid b { font-size: 15px; } }
+
+/* ---- About this place: unique colours that match the site
+   (navy #0f2233, teal #1d6b74, sun gold #f3b765, sunset #e57a4c) ----
+   Country  = night navy → teal, gold accent
+   Division = teal → sea green, mint accent
+   City     = sunset gold → coral, deep navy text            */
+html body #countryList .rnr-place-box { --pb: #1d6b74; --pb-band: linear-gradient(120deg, #0f2233 0%, #16465a 55%, #1d6b74 100%); --pb-ink: #fff; --pb-accent: #f3b765; --pb-soft: rgba(29,107,116,.10);
+  padding: 0; overflow: hidden; background: #fffaf3; border: 1px solid rgba(15,34,51,.08); box-shadow: 0 18px 44px rgba(15,34,51,.10); }
+html body #countryList .rnr-place-box.is-region { --pb: #1f8a7a; --pb-band: linear-gradient(120deg, #1d6b74 0%, #1f8a7a 55%, #3aa58c 100%); --pb-ink: #fff; --pb-accent: #c9f0d9; --pb-soft: rgba(31,138,122,.11); }
+html body #countryList .rnr-place-box.is-city { --pb: #d0643a; --pb-band: linear-gradient(120deg, #f3b765 0%, #ee9a5c 50%, #e57a4c 100%); --pb-ink: #0f2233; --pb-accent: #0f2233; --pb-soft: rgba(229,122,76,.12); }
+html body #countryList .rnr-place-box .rnr-pb-head { position: relative; padding: clamp(18px, 2.6vw, 28px) clamp(18px, 2.6vw, 30px); background: var(--pb-band); color: var(--pb-ink); }
+html body #countryList .rnr-place-box .rnr-pb-head::after { content: ''; position: absolute; right: -40px; top: -60px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.22), transparent 65%); pointer-events: none; }
+html body #countryList .rnr-place-box .rnr-pb-eyebrow { color: var(--pb-accent); }
+html body #countryList .rnr-place-box .rnr-pb-head h3 { color: var(--pb-ink); }
+html body #countryList .rnr-place-box .rnr-pb-flag { filter: drop-shadow(0 4px 10px rgba(0,0,0,.25)); }
+html body #countryList .rnr-place-box .rnr-pb-edit { position: relative; z-index: 1; background: rgba(255,255,255,.18) !important; color: var(--pb-ink) !important; border-color: rgba(255,255,255,.35) !important; }
+html body #countryList .rnr-place-box > :not(.rnr-pb-head) { margin-left: clamp(18px, 2.6vw, 30px); margin-right: clamp(18px, 2.6vw, 30px); }
+html body #countryList .rnr-place-box > :last-child { margin-bottom: clamp(18px, 2.6vw, 26px); }
+html body #countryList .rnr-place-box .rnr-pb-note { margin-top: 18px; border-left-color: var(--pb); background: var(--pb-soft); }
+html body #countryList .rnr-place-box .rnr-pb-desc { margin-top: 16px; }
+html body #countryList .rnr-place-box .rnr-pb-grid li { background: #fff; border: 1px solid rgba(15,34,51,.06); box-shadow: 0 4px 14px rgba(15,34,51,.04); }
+html body #countryList .rnr-place-box .rnr-pb-ico { background: var(--pb-soft); color: var(--pb); }
+html body #countryList .rnr-place-box .rnr-pb-grid em { color: var(--pb); }
+html body #countryList .rnr-place-box .rnr-pb-grid li:first-child { background: var(--pb-band); border-color: transparent; }
+html body #countryList .rnr-place-box .rnr-pb-grid li:first-child :is(small, b, em) { color: var(--pb-ink); }
+html body #countryList .rnr-place-box .rnr-pb-grid li:first-child small { opacity: .8; }
+html body #countryList .rnr-place-box .rnr-pb-grid li:first-child .rnr-pb-ico { background: rgba(255,255,255,.2); color: var(--pb-ink); }
+html.rnr-dark body #countryList .rnr-place-box { background: #10202d; border-color: rgba(255,255,255,.08); }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-grid li:not(:first-child) { background: #152837; border-color: rgba(255,255,255,.06); }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-ico { background: color-mix(in srgb, var(--pb) 22%, #152837); color: color-mix(in srgb, var(--pb) 50%, #fff); }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-grid li:not(:first-child) em { color: color-mix(in srgb, var(--pb) 55%, #fff); }

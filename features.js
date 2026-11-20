@@ -158,7 +158,7 @@
     }
     if (!map) {
       map = L.map(host).setView([22,10],2);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:18, attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
+      if (window.RNR_TILES) window.RNR_TILES.add(L, map); else L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:18, attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
     }
     markers.forEach(m=>m.remove()); markers=[];
     getTravel().filter(c=>c.visited).forEach(c=>{

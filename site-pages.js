@@ -29,9 +29,9 @@
     travels: { label: 'Travel Destinations', title: 'Travel Destinations', text: 'Countries, cities and the photographs from every road I have travelled.', sections: ['rnrGlobe', 'rnrPassport', 'rnrDistricts', 'rnrTripRoutes', 'rnrPhotoMap', 'destinations', 'memories', 'rnrPanoramas'] },
     videos:  { label: 'Videos', title: 'Videos', text: 'Cinematic moments and travel videos from the road.', sections: ['rnrVideos'], soon: 'The first videos are being edited.' },
     timeline: { label: 'Timeline', title: 'Timeline', text: 'Every photo, video and story in the order it happened.', sections: ['rnrTimeline'], soon: 'Add dates to your photos to build your timeline.' },
-    study:   { label: 'Study Journey', title: 'My Study Journey', text: 'From my first classroom to studying in Canada, one chapter at a time.', sections: ['studyJourney'], soon: 'Study memories are on their way.' },
+    study:   { label: 'My Study Journey', title: 'My Study Journey', text: 'From my first classroom to studying in Canada, one chapter at a time.', sections: ['studyJourney'], soon: 'Study memories are on their way.' },
     stories: { label: 'Stories', title: 'Stories', text: 'The moments, people and places behind the photographs.', sections: ['rnrStories', 'rnrFood', 'rnrThenNow', 'lifetimeDocumentary'], soon: 'The first stories are being written.' },
-    plan:    { label: 'My Journey Plan', title: 'My Journey Plan', text: 'Trips, plans and adventures — where I have been and where I am going next.', sections: ['rnrJourneyPlan'], soon: 'The first plans are being written.' },
+    plan:    { label: 'Journey Plan', title: 'Journey Plan', text: 'Trips, plans and adventures — where I have been and where I am going next.', sections: ['rnrJourneyPlan'], soon: 'The first plans are being written.' },
     about:   { label: 'About Me', title: 'About Me', text: 'An international student in Toronto with a dream of seeing the whole world.', sections: ['aboutMeSection', 'rnrGuestbook', 'contact'] },
     toolkit: { label: 'My Toolkit', owner: true, title: 'My Toolkit', text: 'Private tools to plan, record and back up your journeys. Only you can see this page.', sections: [] }
   };
@@ -39,7 +39,7 @@
   const OWNER_ONLY_SECTIONS = new Set(['lifetimeDocumentary']);
   // Older photo tools that were removed from My Toolkit (kept in the files, never shown).
   const RETIRED_SECTIONS = new Set(['premiumStudio', 'humanJournal', 'rnrArchivePolish']);
-  const ORDER = ['home', 'travels', 'stories', 'timeline', 'study', 'plan', 'toolkit', 'videos', 'about'];
+  const ORDER = ['home', 'travels', 'stories', 'timeline', 'plan', 'study', 'about', 'videos', 'toolkit'];
 
   // Every section not placed on a public page goes to the owner's toolkit.
   function assignToolkit() {
@@ -186,8 +186,8 @@
   function navSequence() {
     const link = key => nav.querySelector(`a.rnr-nav-link[data-page="${key}"]`);
     const id = x => document.getElementById(x);
-    return [link('home'), link('travels'), link('stories'), link('timeline'), link('study'), link('plan'), link('toolkit'),
-      id('uploadNavButton'), link('videos'), id('rnrPublishButton'), link('about'), id('ownerAdminToggle')].filter(Boolean);
+    return [link('home'), link('travels'), link('stories'), link('timeline'), link('plan'), link('study'),
+      link('about'), link('videos'), id('rnrPublishButton'), id('ownerAdminToggle')].filter(Boolean);
   }
   let arranging = false;
   function arrangeNav() {
@@ -381,6 +381,19 @@
   }, true);
   addEventListener('popstate', () => route());
   addEventListener('hashchange', () => route());
+
+  // Menu panel: close when tapping outside it or pressing Esc.
+  document.addEventListener('click', event => {
+    const head = document.querySelector('.site-header');
+    if (!head?.classList.contains('rnr-menu-open')) return;
+    if (event.target.closest('.main-nav, #rnrMobileToggle')) return;
+    head.classList.remove('rnr-menu-open');
+    document.getElementById('rnrMobileToggle')?.setAttribute('aria-expanded', 'false');
+  });
+  addEventListener('keydown', event => {
+    const head = document.querySelector('.site-header');
+    if (event.key === 'Escape' && head?.classList.contains('rnr-menu-open')) { head.classList.remove('rnr-menu-open'); document.getElementById('rnrMobileToggle')?.focus(); }
+  });
 
   // ---------- Owner device / admin button ----------
   function syncOwner() {

@@ -25,7 +25,7 @@
 
   const PAGES = [
     ['home', 'Home', 'হোম', '🏠'], ['travels', 'Travel Destinations', 'ভ্রমণের গন্তব্য', '🌍'], ['stories', 'Stories', 'গল্প', '📖'],
-    ['timeline', 'Timeline', 'টাইমলাইন', '🗓️'], ['study', 'Study Journey', 'পড়াশোনার যাত্রা', '🎓'], ['plan', 'My Journey Plan', 'আমার যাত্রা পরিকল্পনা', '🧭'],
+    ['timeline', 'Timeline', 'টাইমলাইন', '🗓️'], ['study', 'My Study Journey', 'আমার পড়াশোনার যাত্রা', '🎓'], ['plan', 'Journey Plan', 'যাত্রা পরিকল্পনা', '🧭'],
     ['videos', 'Videos', 'ভিডিও', '🎬'], ['about', 'About Me', 'আমার কথা', '👋']
   ];
   const SECTIONS = [

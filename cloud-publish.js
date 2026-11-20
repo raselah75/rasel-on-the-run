@@ -23,7 +23,7 @@
   // What is public. Everything else stays on your device.
   const LOCAL_KEYS = ['raselOnTheRunData', 'raselOnTheRunAboutMe', 'raselOnTheRunStudyJourneyV1', 'raselOnTheRunLifetimeDocumentaryV1',
     'raselOnTheRunCountryOrderV1', 'raselOnTheRunRemovedDefaultsV1', 'raselOnTheRunHeroCoverV1', 'raselOnTheRunSiteTextV1', 'raselOnTheRunNextTripV1', 'raselOnTheRunGlobeListsV1',
-    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1', 'raselOnTheRunJourneyPlanPublicV1', 'raselOnTheRunDistrictsV1', 'raselOnTheRunWatermarkV1'];
+    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1', 'raselOnTheRunJourneyPlanPublicV1', 'raselOnTheRunDistrictsV1', 'raselOnTheRunWatermarkV1', 'raselOnTheRunPlaceNotesV1', 'raselOnTheRunPlaceFactsV1'];
   const DATABASES = [
     { name: 'RaselOnTheRunPhotos', stores: ['photos'], logo: true },
     { name: 'RaselOnTheRunDesignAssets', stores: ['assets'] },

@@ -13,7 +13,7 @@
   const T = {
     // Header, footer, navigation
     'Every Journey Tells a Story.': 'প্রতিটি যাত্রাই একটি গল্প।',
-    'Home': 'হোম', 'Travels': 'ভ্রমণ', 'Travel Destinations': 'ভ্রমণের গন্তব্য', 'My Journey Plan': 'আমার যাত্রা পরিকল্পনা', 'Trips, plans and adventures — where I have been and where I am going next.': 'ভ্রমণ, পরিকল্পনা আর অ্যাডভেঞ্চার—কোথায় গেছি আর এরপর কোথায় যাচ্ছি।', 'The first plans are being written.': 'প্রথম পরিকল্পনাগুলো লেখা হচ্ছে।', 'Study Journey': 'পড়াশোনার যাত্রা', 'Stories': 'গল্প', 'About': 'আমার কথা',
+    'Home': 'হোম', 'Travels': 'ভ্রমণ', 'Travel Destinations': 'ভ্রমণের গন্তব্য', 'My Journey Plan': 'আমার যাত্রা পরিকল্পনা', 'Journey Plan': 'যাত্রা পরিকল্পনা', 'My Study Journey': 'আমার পড়াশোনার যাত্রা', 'Trips, plans and adventures — where I have been and where I am going next.': 'ভ্রমণ, পরিকল্পনা আর অ্যাডভেঞ্চার—কোথায় গেছি আর এরপর কোথায় যাচ্ছি।', 'The first plans are being written.': 'প্রথম পরিকল্পনাগুলো লেখা হচ্ছে।', 'Study Journey': 'পড়াশোনার যাত্রা', 'Stories': 'গল্প', 'About': 'আমার কথা',
     'My Toolkit': 'আমার টুলকিট', 'Search': 'খুঁজুন', 'Add Photos': 'ছবি যোগ করুন',
     // Hero + clocks
     'MY PERSONAL TRAVEL JOURNAL': 'আমার ব্যক্তিগত ভ্রমণ-ডায়েরি',

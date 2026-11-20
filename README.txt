@@ -915,3 +915,48 @@ ARRANGE COUNTRIES — CHECKED (18 November 2026)
 - iPhone fix: holding a card no longer opens the "Save image" menu.
 - A note now says the order is saved. The order is saved on THAT device;
   visitors and your other devices see it after you Publish.
+
+MAP + MENU FIX (18 November 2026)
+- Maps showed "API KEY REQUIRED": the CARTO map service now needs a paid
+  key. All maps (Photo map, Trip routes, travel map) now use free
+  OpenStreetMap tiles, with the Esri street map as an automatic backup.
+  Dark mode shows a dark version of the map. New file: map-tiles.js.
+- Laptop / desktop menu (when the links do not fit on one row): now a neat
+  panel on the right instead of a full-width list; the current page has a
+  gold dot; closes when you click outside it or press Esc.
+Offline cache version: shell-v29.
+
+HEADER + MY TOOLKIT (18 November 2026)
+- Laptop / desktop (wider than 900 px): the links are always shown at the
+  top — one row when they fit, otherwise a second row under the logo. No ☰
+  menu on computers. Phones / small tablets keep the ☰ menu.
+- "My Toolkit" is removed from the header. Open it from My Journey Plan >
+  "🧰 All my tools" (Admin mode), or the trip / adventure buttons there.
+  Nothing was deleted: the plan forms, backup, photo book and security
+  tools are still there.
+Offline cache version: shell-v30.
+
+HEADER ORDER (19 November 2026)
+Home · Travel Destinations · Stories · Timeline · Journey Plan ·
+My Study Journey · About Me · Videos · Publish · Admin
+("Add Photos" removed from the header: add photos inside a city with
+"Upload Photos", or in My Memories with "Add Your Memories".)
+Offline cache version: shell-v34.
+
+ABOUT THIS PLACE BOX (19 November 2026) — place-facts.js
+- Every country, state / division and city page in Travel Destinations
+  now has a box under the title:
+  Country: capital, area (km²), population (and year), people per km²,
+           number of divisions / states, cities in your archive, currency,
+           language, continent, your photos.
+  State / division: capital, cities, area and population with their share
+           of the country ("22.8% of Bangladesh"), people per km², photos.
+  City: located in, elevation, area, population with % of the country,
+           people per km², photos.
+- Facts come from Wikipedia / Wikidata automatically (free, no key; saved
+  on the device for 30 days, and published so visitors load faster).
+- Admin mode > "✎ Edit this box": write your own words about the place
+  (shown at the top), and correct area / population / capital by hand.
+  "Refresh facts" looks the place up again. Saved in
+  raselOnTheRunPlaceNotesV1 (published).
+Offline cache version: shell-v35.

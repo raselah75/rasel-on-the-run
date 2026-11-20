@@ -130,7 +130,7 @@
   section.className = 'section rnr-plan-section';
   section.innerHTML = `
     <div class="rnr-plan-owner"><span>Only you can see this:</span> add or edit entries in My Toolkit —
-      <a href="#nextTravelUpgrade">Itinerary &amp; routes</a><a href="#adventureExplorer">Adventures, road trips &amp; camping</a><a href="#advancedAdventure">Trails, parks &amp; wildlife</a><a href="#finalJourneyPack">Smart Trip Planner</a></div>
+      <a href="#nextTravelUpgrade">Itinerary &amp; routes</a><a href="#adventureExplorer">Adventures, road trips &amp; camping</a><a href="#advancedAdventure">Trails, parks &amp; wildlife</a><a href="#finalJourneyPack">Smart Trip Planner</a><a href="#toolkit" class="rnr-plan-alltools">🧰 All my tools (backup, photo book, security)</a></div>
     <div class="rnr-plan-next"></div>
     <div class="rnr-plan-tabs" role="tablist" aria-label="Filter"></div>
     <div class="rnr-plan-grid"></div>
