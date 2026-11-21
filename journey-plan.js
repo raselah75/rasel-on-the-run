@@ -109,15 +109,34 @@
     });
     return items;
   }
+
+  // Example journeys shown until real ones are added in My Toolkit (then only the real ones show).
+  const S = (cat, edit, type, title, place, start, end, facts, notes, status = '') => ({ id: `sample-${cat}-${title.replace(/\W+/g, '-').toLowerCase()}`, cat, edit, type, title, place, start, end, status, facts, notes, link: '', sample: true });
+  const SAMPLE = [
+    S('plan', 'finalJourneyPack', 'Trip plan', 'Home for Eid — Dhaka & Cumilla', 'Dhaka · Cumilla, Bangladesh', '2027-03-18', '2027-04-05', [['Transport', 'Flight Toronto → Dhaka, then train to Cumilla'], ['Stay', 'With family']], 'Three weeks with family for Eid: rasmalai in Cumilla, the old town in Dhaka, Moynamoti ruins and as much home food as possible.'),
+    S('plan', 'nextTravelUpgrade', 'Trip plan', 'Banff & Lake Louise in summer', 'Alberta, Canada', '2027-07-08', '2027-07-15', [['Transport', 'Flight to Calgary + rental car'], ['Stay', 'Hostel in Banff town']], 'Moraine Lake at sunrise, the Icefields Parkway, a canoe on Lake Louise and a hike up to the Plain of Six Glaciers tea house.'),
+    S('plan', 'nextTravelUpgrade', 'Trip plan', 'Montreal & Quebec City by train', 'Quebec, Canada', '2027-05-20', '2027-05-24', [['Transport', 'VIA Rail from Toronto'], ['Stay', 'Old Montreal guesthouse']], 'Long weekend: Old Montreal, Mount Royal, bagels, then the walls and little streets of Old Quebec.'),
+    S('trip', 'nextTravelUpgrade', 'Route', 'Toronto → Dhaka', 'Toronto Pearson → Hazrat Shahjalal Airport', '2027-03-17', '', [['By', 'Flight via Doha']], 'About 20 hours door to door — the longest and best trip of every year.'),
+    S('trip', 'adventureExplorer', 'Road trip', 'Niagara Falls & wine country', 'Ontario, Canada', '2026-09-14', '2026-09-14', [['Vehicle', 'Car'], ['Stops', 'Niagara-on-the-Lake · Horseshoe Falls · Clifton Hill']], 'A full day: the boat ride into the mist, the falls lit up at night and a slow drive back along the lake.'),
+    S('trip', 'adventureExplorer', 'Camping', 'Two nights in Algonquin Park', 'Algonquin Provincial Park, Ontario', '2027-09-24', '2027-09-26', [['Nights', '2'], ['Weather', 'Cool autumn nights']], 'Canoe camping for the autumn colours — paddling Canoe Lake and cooking over a fire.'),
+    S('adventure', 'adventureExplorer', 'Hike', 'Keokradong summit trek', 'Bandarban, Bangladesh', '2027-03-26', '2027-03-28', [['Difficulty', 'Hard'], ['Category', 'Mountain trek']], 'Three days through Ruma and Boga Lake to one of the highest points in Bangladesh, staying with Bawm families on the way.'),
+    S('adventure', 'advancedAdventure', 'Trail', 'Bruce Trail — Toronto section', 'Ontario, Canada', '2026-10-04', '', [['Difficulty', 'Moderate'], ['Time', 'About 5 hours']], 'Escarpment views and autumn leaves, one weekend at a time.'),
+    S('adventure', 'adventureExplorer', 'Challenge', 'Visit all 64 districts of Bangladesh', 'Bangladesh', '', '', [['Goal', '64 districts'], ['Progress', 'Started']], 'One district at a time — every trip home adds a few more to the map.', 'Planned'),
+    S('nature', 'advancedAdventure', 'Hidden place', 'Ratargul Swamp Forest', 'Sylhet, Bangladesh', '2027-03-30', '', [['Category', 'Freshwater swamp forest']], 'Rowing a small boat between trees standing in water — best in the rainy season.'),
+    S('nature', 'advancedAdventure', 'Park', 'Sajek Valley', 'Rangamati, Bangladesh', '', '', [['Category', 'Hills & clouds']], 'Waking up above the clouds on the roof of the Chittagong Hill Tracts.', 'Planned'),
+    S('nature', 'advancedAdventure', 'Wildlife', 'Sundarbans — Royal Bengal tiger country', 'Khulna, Bangladesh', '', '', [['Seen', 'Spotted deer, kingfishers, crocodiles'], ['Category', 'Mangrove forest']], 'A three-day boat trip into the largest mangrove forest in the world.', 'Planned'),
+    S('nature', 'advancedAdventure', 'Sunrise & sunset', 'Sunset at Kuakata beach', 'Patuakhali, Bangladesh', '', '', [['Category', 'Sunrise and sunset from the same beach']], 'One of the few beaches where you can watch both the sunrise and the sunset over the sea.', 'Planned')
+  ];
   const hasOwnerData = () => SOURCE_KEYS.some(k => localStorage.getItem(k) !== null);
   function items() {
     if (hasOwnerData()) {
       const list = collectFromSources();
       const next = JSON.stringify({ items: list });
       try { if (localStorage.getItem(PUBLIC_KEY) !== next) { realSet.call(localStorage, PUBLIC_KEY, next); } } catch {}
-      return list;
+      if (list.length) return list;
     }
-    return (json(PUBLIC_KEY) || {}).items || [];
+    const pub = (json(PUBLIC_KEY) || {}).items || [];
+    return pub.length ? pub : SAMPLE;
   }
   const isUpcoming = it => (it.start && it.start >= todayISO()) || (it.end && it.end >= todayISO()) || (!it.start && PLANNED.test(it.status)) || (it.cat === 'plan' && !it.start);
   const fmt = iso => { if (!iso) return ''; const d = new Date(`${iso}T12:00:00`); return isNaN(d) ? iso : d.toLocaleDateString(bn() ? 'bn-BD' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' }); };
@@ -153,7 +172,7 @@
       ${facts.length ? `<dl class="rnr-plan-facts">${facts.map(([k, v]) => `<div><dt>${esc(L(k))}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
       ${it.notes ? `<p class="rnr-plan-notes${long && !opened ? ' is-clamped' : ''}">${esc(it.notes)}</p>${long ? `<button type="button" class="rnr-plan-more" data-plan-more="${esc(it.id)}">${opened ? T('Show less', 'কম দেখুন') : T('Read more', 'আরও পড়ুন')}</button>` : ''}` : ''}
       ${it.link ? `<a class="rnr-plan-link" href="${esc(it.link)}" target="_blank" rel="noopener noreferrer">${T('Open map', 'ম্যাপ খুলুন')} ↗</a>` : ''}
-      ${it.edit ? `<a class="rnr-owner-pill rnr-plan-edit" href="#${esc(it.edit)}">Edit in My Toolkit</a>` : ''}
+      ${it.edit ? `<a class="rnr-owner-pill rnr-plan-edit" href="#${esc(it.edit)}">${it.sample ? 'Example — add your own in My Toolkit' : 'Edit in My Toolkit'}</a>` : ''}
     </article>`;
   }
 

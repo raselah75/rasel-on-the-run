@@ -73,7 +73,7 @@
     'Your name': 'আপনার নাম', 'From (city or country)': 'কোথা থেকে (শহর বা দেশ)', 'Message': 'বার্তা', 'Send message': 'বার্তা পাঠান',
     "Messages appear after I read them. Please don't share private details.": 'আমি পড়ার পর বার্তা দেখা যাবে। ব্যক্তিগত তথ্য লিখবেন না।',
     // Bangladesh districts map
-    'MY BANGLADESH': 'আমার বাংলাদেশ', '64 districts, one map': '৬৪ জেলা, একটি মানচিত্র', 'Every district I have been to lights up. Tap one to see its photos.': 'যে জেলাগুলোতে গেছি সেগুলো আলোকিত। ছবি দেখতে যেকোনো জেলায় চাপ দিন।',
+    'MY BANGLADESH': 'আমার বাংলাদেশ', '64 districts, one map': '৬৪ জেলা, একটি মানচিত্র', '64 Districts, One Map': '৬৪ জেলা, একটি মানচিত্র', 'Every district I have been to lights up. Tap one to see its photos.': 'যে জেলাগুলোতে গেছি সেগুলো আলোকিত। ছবি দেখতে যেকোনো জেলায় চাপ দিন।',
     // Passport, routes, 360° views, food diary
     'PASSPORT': 'পাসপোর্ট', 'My passport stamps': 'আমার পাসপোর্টের সিল', 'One stamp for every country I have stepped into.': 'যে দেশেই পা রেখেছি, তার একটি করে সিল।',
     'ON THE ROAD': 'পথে পথে', 'My trip routes': 'আমার ভ্রমণের রুট', 'Pick a trip and watch the route draw itself, stop by stop.': 'একটি ট্রিপ বেছে নিন—রুটটা নিজে নিজে আঁকা হবে, এক স্টপ থেকে আরেক স্টপে।',

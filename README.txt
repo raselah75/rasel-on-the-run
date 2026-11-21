@@ -1001,3 +1001,20 @@ FULLER CITY / STATE BOXES (19 November 2026)
 - Country box also shows its share of the world's people and land.
 - A value Wikipedia does not have shows "—"; fill it with "Edit this box".
 Offline cache version: shell-v39.
+
+BIGGER PLACE CARDS (20 November 2026)
+- Country, division / state and city cards in Travel Destinations are a
+  little taller (about 290–300 px on computers, 250–270 px on phones).
+  Everything else (famous-place background photos, text, layout) is the
+  same as before.
+Offline cache version: shell-v41.
+
+21 November 2026
+- Place cards bigger: 360 px tall on computers (3 per row), 300 px on phones.
+- "64 Districts, One Map" title in capital letters.
+- Photo map / trip routes in dark mode: a real dark map (Esri Dark Gray)
+  instead of a filtered map that looked white and washed-out. Light mode
+  keeps OpenStreetMap. The map switches when you change light / dark.
+- Journey Plan: 13 example journeys (plans, trips, adventures, nature) are
+  shown until you add your own in My Toolkit; then only yours show.
+Offline cache version: shell-v42.

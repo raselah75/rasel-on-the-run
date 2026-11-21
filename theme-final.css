@@ -1295,7 +1295,7 @@ html.rnr-dark .rnr-film-card, html.rnr-dark .rnr-tl-years button[aria-selected="
 html.rnr-dark .rnr-tl-years button[aria-selected="true"] { background: var(--rnr-grad-sun) !important; color: #1a1408 !important; }
 html.rnr-dark .rnr-map-frame, html.rnr-dark .rnr-route-frame { background: #1b2a35; }
 html.rnr-dark .leaflet-container { background: #1b2a35; }
-html.rnr-dark .leaflet-tile-pane { filter: brightness(.62) invert(1) contrast(2.6) hue-rotate(200deg) saturate(.32) brightness(.78); }
+html.rnr-dark .leaflet-tile-pane { filter: none !important; }
 html.rnr-dark .leaflet-bar a { background: #13222e; color: #e8eef2; border-color: rgba(255,255,255,.12); }
 html.rnr-dark .leaflet-popup-content-wrapper, html.rnr-dark .leaflet-popup-tip { background: #13222e; color: #e8eef2; }
 html.rnr-dark .leaflet-control-attribution { background: rgba(10,20,28,.75) !important; color: #9db0bd; }
@@ -1949,7 +1949,8 @@ html body #countryList .rnr-arranging img { -webkit-user-drag: none; pointer-eve
 .rnr-arr-list li, .rnr-arr-list li * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 
 /* Map tiles (OpenStreetMap): soft dark version in dark mode */
-html.rnr-dark .leaflet-tile.rnr-map-tiles, html.rnr-dark .rnr-map-tiles .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7); }
+/* Dark mode uses a real dark map now (map-tiles.js), so no colour filter on tiles. */
+html.rnr-dark .leaflet-tile, html.rnr-dark .rnr-map-tiles .leaflet-tile { filter: none !important; }
 html.rnr-dark .leaflet-container { background: #1b2a35; }
 
 /* =====================================================================
@@ -2165,3 +2166,22 @@ html.rnr-dark body .study-intro-kicker { color: #f3b765 !important; }
 html.rnr-dark body .study-level { background: rgba(243,183,101,.16) !important; color: #f3b765 !important; }
 html.rnr-dark body .rnr-study-edit { background: transparent !important; border: 1.5px solid rgba(255,255,255,.3) !important; color: #eef4f7 !important; }
 html.rnr-dark body #rnrMaintenance button, html.rnr-dark body .rnr-maint-grid button { background: #5cc0c9 !important; color: #071019 !important; border-color: #5cc0c9 !important; }
+
+/* =====================================================================
+   PLACE CARDS: only a little taller (everything else unchanged)
+   ===================================================================== */
+html body #countryList#countryList .premium-archive-grid > .rnr-photo-card.rnr-photo-card-small { min-height: 290px !important; }
+html body #countryList#countryList .nested-country-list .country-shell > .rnr-photo-card { min-height: 300px !important; }
+@media (max-width: 700px) {
+  html body #countryList#countryList .premium-archive-grid > .rnr-photo-card.rnr-photo-card-small { min-height: 250px !important; }
+  html body #countryList#countryList .nested-country-list .country-shell > .rnr-photo-card { min-height: 270px !important; }
+}
+
+/* Place cards: bigger (3 per row on laptops, 2 on tablets, 1 on phones) */
+html body #countryList#countryList .premium-archive-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)) !important; gap: 22px !important; }
+html body #countryList#countryList .premium-archive-grid > .rnr-photo-card.rnr-photo-card-small { min-height: 360px !important; }
+html body #countryList#countryList .nested-country-list .country-shell > .rnr-photo-card { min-height: 360px !important; }
+@media (max-width: 700px) {
+  html body #countryList#countryList .premium-archive-grid > .rnr-photo-card.rnr-photo-card-small,
+  html body #countryList#countryList .nested-country-list .country-shell > .rnr-photo-card { min-height: 300px !important; }
+}

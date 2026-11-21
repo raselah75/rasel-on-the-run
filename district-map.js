@@ -56,7 +56,7 @@
   section.id = 'rnrDistricts';
   section.className = 'section rnr-district-section';
   section.innerHTML = `
-    <div class="section-heading"><div><p class="eyebrow">MY BANGLADESH</p><h2>64 districts, one map</h2><p>Every district I have been to lights up. Tap one to see its photos.</p></div></div>
+    <div class="section-heading"><div><p class="eyebrow">MY BANGLADESH</p><h2>64 Districts, One Map</h2><p>Every district I have been to lights up. Tap one to see its photos.</p></div></div>
     <div class="rnr-district-wrap" data-no-translate>
       <div class="rnr-district-map"><svg role="img" aria-label="Map of the 64 districts of Bangladesh"></svg></div>
       <aside class="rnr-district-side">
