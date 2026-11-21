@@ -1018,3 +1018,10 @@ Offline cache version: shell-v41.
 - Journey Plan: 13 example journeys (plans, trips, adventures, nature) are
   shown until you add your own in My Toolkit; then only yours show.
 Offline cache version: shell-v42.
+
+== Cloud publishing connected (Nov 21, 2026) ==
+- site-config.js now has the Supabase project URL and the publishable key
+  (sb_publishable_...). The publishable key is safe to be public.
+- Never put the service_role / secret key in the site.
+- Database + storage rules installed with: supabase db push --remote
+Offline cache version: shell-v43.

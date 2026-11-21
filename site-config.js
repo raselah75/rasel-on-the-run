@@ -43,8 +43,8 @@ window.RNR_SITE = {
   //                   An old-style "anon" key (eyJ...) also works. Both are public, safe here.
   // NEVER put the service_role / secret key in this file.
   cloud: {
-    supabaseUrl: '',
-    supabaseAnonKey: '',
+    supabaseUrl: 'https://owixdqzoxljeprkutvfz.supabase.co',
+    supabaseAnonKey: 'sb_publishable_mpuu2Q37YJVD0KNf0xEbQw__aBusQLZ',
     ownerEmail: 'raselahmmed1520@gmail.com',
     bucket: 'site'
   },
