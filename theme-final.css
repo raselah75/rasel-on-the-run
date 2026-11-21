@@ -2108,3 +2108,60 @@ html.rnr-dark body #countryList .rnr-place-box { background: #10202d; border-col
 html.rnr-dark body #countryList .rnr-place-box .rnr-pb-grid li:not(:first-child) { background: #152837; border-color: rgba(255,255,255,.06); }
 html.rnr-dark body #countryList .rnr-place-box .rnr-pb-ico { background: color-mix(in srgb, var(--pb) 22%, #152837); color: color-mix(in srgb, var(--pb) 50%, #fff); }
 html.rnr-dark body #countryList .rnr-place-box .rnr-pb-grid li:not(:first-child) em { color: color-mix(in srgb, var(--pb) 55%, #fff); }
+
+/* ---- About this place: live population + counting numbers ---- */
+html body #countryList .rnr-place-box .rnr-pb-grid b { font-variant-numeric: tabular-nums; }
+html body #countryList .rnr-place-box .rnr-pb-grid li.is-live { position: relative; overflow: visible; grid-column: span 2; background: linear-gradient(135deg, #fff, color-mix(in srgb, var(--pb) 7%, #fff)); border: 1.5px solid color-mix(in srgb, var(--pb) 35%, transparent); }
+html body #countryList .rnr-place-box .rnr-pb-grid li.is-live b { font-size: clamp(20px, 2.3vw, 26px); letter-spacing: -.01em; display: inline-block; transition: color .3s; }
+html body #countryList .rnr-place-box .rnr-pb-grid li.is-live > div { position: relative; }
+.rnr-pb-livebadge { display: inline-flex; align-items: center; gap: 5px; margin-left: 6px; padding: 2px 7px; border-radius: 99px; background: #e5484d; color: #fff !important; font-size: 10px; font-weight: 800; letter-spacing: .1em; vertical-align: 1px; }
+.rnr-pb-livebadge i { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: rnrLivePulse 1.4s ease-in-out infinite; }
+@keyframes rnrLivePulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+html body #countryList .rnr-place-box b.is-tick { animation: rnrTick .7s ease; }
+@keyframes rnrTick { 0% { color: inherit; } 25% { color: var(--pb); transform: translateY(-2px); } 100% { transform: none; } }
+.rnr-pb-plus { position: absolute; right: 0; top: 18px; font: 800 14px/1 var(--rnr-font, system-ui); color: #23a06a; pointer-events: none; animation: rnrPlus 1.5s ease-out forwards; }
+.rnr-pb-plus.is-down { color: #e5484d; }
+@keyframes rnrPlus { 0% { opacity: 0; transform: translateY(8px) scale(.8); } 20% { opacity: 1; transform: translateY(0) scale(1.1); } 100% { opacity: 0; transform: translateY(-26px) scale(1); } }
+html body #countryList .rnr-place-box .rnr-pb-today { color: #23a06a !important; font-weight: 800; }
+html body #countryList .rnr-place-box .rnr-pb-today.is-down { color: #e5484d !important; }
+html body #countryList .rnr-place-box .rnr-pb-today:empty { display: none; }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-grid li.is-live { background: linear-gradient(135deg, #152837, color-mix(in srgb, var(--pb) 18%, #152837)); }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-today, html.rnr-dark .rnr-pb-plus { color: #4cd38f !important; }
+@media (max-width: 560px) { html body #countryList .rnr-place-box .rnr-pb-grid li.is-live { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { .rnr-pb-livebadge i, .rnr-pb-plus, html body #countryList .rnr-place-box b.is-tick { animation: none !important; } }
+
+/* ---- My Study Journey: the "Add Study Memory" button stays visible for the owner ---- */
+body.admin-mode.rnr-page-study #studyJourney > .section-heading { display: flex !important; justify-content: flex-end; margin-bottom: 14px; }
+body.admin-mode.rnr-page-study #studyJourney > .section-heading > div { display: none; }
+body.admin-mode.rnr-page-study #addStudyEntryButton::before { content: '✎ '; }
+.study-empty-add { margin-top: 18px; }
+body:not(.admin-mode) .study-empty-add { display: none !important; }
+html body .study-entry-form { margin: 0 0 26px; padding: clamp(18px, 2.5vw, 28px); border-radius: 22px; background: var(--rnr-paper, #fffaf3); box-shadow: 0 14px 40px rgba(15,34,51,.1); }
+html.rnr-dark body .study-entry-form { background: #10202d; border: 1px solid rgba(255,255,255,.08); }
+html.rnr-dark body .study-form-grid input, html.rnr-dark body .study-form-grid select, html.rnr-dark body .study-form-grid textarea { background: #18303f; color: #eef4f7; }
+
+/* ---- Toolkit in dark mode: calendar, achievements, yearbook, tabs, buttons ---- */
+html.rnr-dark body .next-day { background: #152837 !important; border-color: rgba(255,255,255,.07) !important; color: #c9d6df !important; }
+html.rnr-dark body .next-day strong { color: #f3b765 !important; }
+html.rnr-dark body .next-day:has(> :not(strong)) { background: linear-gradient(135deg, rgba(29,107,116,.45), #152837) !important; }
+html.rnr-dark body .next-stat { background: #1b3242 !important; border-color: rgba(243,183,101,.25) !important; color: #eef4f7 !important; }
+html.rnr-dark body .next-stat small, html.rnr-dark body .next-stat * { color: #eef4f7 !important; opacity: 1 !important; }
+html.rnr-dark body .next-yearbook, html.rnr-dark body .next-card { background: #10202d !important; border-color: rgba(255,255,255,.08) !important; color: #eef4f7 !important; }
+html.rnr-dark body .next-muted, html.rnr-dark body .next-intro { color: #9fb0bd !important; }
+html.rnr-dark body .next-upgrade select, html.rnr-dark body .next-upgrade input, html.rnr-dark body .next-upgrade textarea { background: #18303f !important; color: #eef4f7 !important; border-color: rgba(255,255,255,.14) !important; }
+html.rnr-dark body .fj-tab { background: #18303f !important; color: #dbe6ec !important; border-color: rgba(255,255,255,.12) !important; }
+html.rnr-dark body .fj-tab:is(.active, [aria-selected="true"], .is-active) { background: #f3b765 !important; color: #0f2233 !important; }
+html.rnr-dark body :is(.jt-btn, .next-btn, .adv-btn, .ax-btn, .ux-btn, .fj-btn, .p7-btn):not(.alt) { background: #5cc0c9 !important; border-color: #5cc0c9 !important; color: #071019 !important; }
+html.rnr-dark body :is(.jt-btn, .next-btn, .adv-btn, .ax-btn, .ux-btn, .fj-btn, .p7-btn).alt { background: transparent !important; border: 1.5px solid rgba(255,255,255,.3) !important; color: #eef4f7 !important; }
+html.rnr-dark body :is(.journey-tools, .next-upgrade, .adventure-section, .ax-section, .rnr-book-promo) .eyebrow { color: #f3b765 !important; }
+
+/* ---- City box: a new, lighter colour (dusk violet → rose) ---- */
+html body #countryList .rnr-place-box.is-city { --pb: #8a63d2; --pb-band: linear-gradient(120deg, #6d5bd0 0%, #9a6fd8 50%, #d98aa8 100%); --pb-ink: #fff; --pb-accent: #ffe1a8; --pb-soft: rgba(138,99,210,.12); }
+/* Box titles / first tile keep their colours in dark mode too */
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-head h3 { color: var(--pb-ink) !important; }
+html.rnr-dark body #countryList .rnr-place-box .rnr-pb-eyebrow { color: var(--pb-accent) !important; }
+html body #countryList .rnr-place-box .rnr-pb-grid li:first-child :is(small, b, em) { color: var(--pb-ink) !important; }
+html.rnr-dark body .study-intro-kicker { color: #f3b765 !important; }
+html.rnr-dark body .study-level { background: rgba(243,183,101,.16) !important; color: #f3b765 !important; }
+html.rnr-dark body .rnr-study-edit { background: transparent !important; border: 1.5px solid rgba(255,255,255,.3) !important; color: #eef4f7 !important; }
+html.rnr-dark body #rnrMaintenance button, html.rnr-dark body .rnr-maint-grid button { background: #5cc0c9 !important; color: #071019 !important; border-color: #5cc0c9 !important; }

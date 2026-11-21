@@ -12,14 +12,16 @@
   function render() {
     const items = read();
     if (!items.length) {
-      timeline.innerHTML = '<div class="empty-state study-empty"><h3>Your story starts in the classroom</h3><p>School photographs, class memories, certificates, friends, and milestones will live here.</p></div>';
+      timeline.innerHTML = '<div class="empty-state study-empty"><h3>Your story starts in the classroom</h3><p>School photographs, class memories, certificates, friends, and milestones will live here.</p><button type="button" class="primary-button study-admin-only study-empty-add" data-study-add>✎ Write my first chapter</button></div>';
       return;
     }
     const order = {'Primary School':0,'High School':1,'College':2,'University':3,'Other':4};
     items.sort((a,b) => (order[a.level] ?? 9) - (order[b.level] ?? 9) || String(a.period || '').localeCompare(String(b.period || '')));
     timeline.innerHTML = items.map((item) => `<article class="study-entry"><div class="study-entry-meta"><span class="study-level">${escapeHTML(item.level)}</span><span class="study-period">${escapeHTML(item.period || 'A memorable chapter')}</span><span class="study-institution">${escapeHTML(item.institution)}</span></div><div class="study-entry-content"><h3>${escapeHTML(item.title)}</h3>${item.story ? `<p>${escapeHTML(item.story)}</p>` : ''}${item.photos?.length ? `<div class="study-photo-grid">${item.photos.map((photo) => `<img src="${photo.data}" alt="${escapeHTML(photo.name || 'Study memory')}" loading="lazy">`).join('')}</div>` : ''}<button class="study-delete" type="button" data-delete-study="${escapeHTML(item.id)}">Delete memory</button></div></article>`).join('');
   }
-  $('addStudyEntryButton')?.addEventListener('click', () => { form.hidden = false; form.scrollIntoView({behavior:'smooth',block:'center'}); });
+  const openForm = () => { form.hidden = false; form.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(() => $('studyInstitution')?.focus({ preventScroll: true }), 400); };
+  $('addStudyEntryButton')?.addEventListener('click', openForm);
+  document.addEventListener('click', event => { if (event.target.closest('[data-study-add]') && document.body.classList.contains('admin-mode')) openForm(); });
   $('cancelStudyEntry')?.addEventListener('click', () => { form.reset(); form.hidden = true; $('studyFormStatus').textContent = ''; });
   form.addEventListener('submit', async (event) => {
     event.preventDefault();

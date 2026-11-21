@@ -960,3 +960,44 @@ ABOUT THIS PLACE BOX (19 November 2026) — place-facts.js
   "Refresh facts" looks the place up again. Saved in
   raselOnTheRunPlaceNotesV1 (published).
 Offline cache version: shell-v35.
+
+LIVE POPULATION + ANIMATED NUMBERS (19 November 2026)
+- In every "About this place" box (country, state / division, city /
+  district) the population is now a LIVE counter (red LIVE dot): it starts
+  from the latest official count on Wikidata and grows (or shrinks) every
+  second by the place's yearly growth rate — worked out from its own census
+  history, or the country's rate when a city / state has only one count.
+  A "+1" floats up each time a person is added, and "▲ +1,477 today" shows
+  the change since midnight. This is an estimate (like Worldometer): no
+  government publishes a real second-by-second count.
+- Area, people per km², divisions, cities and photos count up from 0 when
+  the box comes into view. "Reduce motion" on a device turns this off.
+- If you type a population yourself (Edit this box), the counter grows from
+  your number, starting from the day you saved it.
+Offline cache version: shell-v37.
+
+FIXES (19 November 2026)
+- My Study Journey: the "✎ Add Study Memory" button is visible again in
+  Admin mode (it was hidden with the page title), plus a "Write my first
+  chapter" button when the page is empty. The form: level, school, years,
+  title, your story and photos.
+- Dark mode: the toolkit calendar, achievement badges, yearbook, tabs and
+  buttons now use dark colours with readable text (no more white boxes).
+- City box: new dusk violet → rose colour (country = navy/teal, division =
+  teal/green, city = violet/rose). Titles keep their colours in dark mode.
+- Live population now also works for cities whose count has no date (uses
+  the country's latest census date).
+Offline cache version: shell-v38.
+
+FULLER CITY / STATE BOXES (19 November 2026)
+- Every city / district box now has: located in, live population, area,
+  people per km², share of the country's people ("1 in every 390"), share of
+  the division / state's people, share of the country's land, elevation,
+  the district / county it belongs to (its people and area, and how many of
+  them live in the city), and your photos.
+- Every division / state box: capital, live population, area, people per
+  km², share of the country's people and land, cities, average per city,
+  photos.
+- Country box also shows its share of the world's people and land.
+- A value Wikipedia does not have shows "—"; fill it with "Edit this box".
+Offline cache version: shell-v39.
