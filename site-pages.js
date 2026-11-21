@@ -1,7 +1,9 @@
 /* =====================================================================
    RASEL ON THE RUN — PAGES, MENU AND PUBLIC / OWNER VIEW
-   - Splits the long single page into five pages: Home, Travels,
-     Study Journey, Stories and About (plus "My Toolkit" for the owner).
+   - Splits the long single page into pages: Home, Travels, Stories, Timeline,
+     Journey Plan, Study Journey, About, Videos (plus "Settings" for the owner).
+     The old "My Toolkit" tools now sit under Journey Plan (owner only) and
+     the security / backup / money tools under Settings.
      Nothing is deleted: every existing section stays on one of the pages.
    - Visitors only see finished content. Forms, trackers, backups, empty
      placeholders and owner buttons are shown only in Admin mode.
@@ -33,20 +35,78 @@
     stories: { label: 'Stories', title: 'Stories', text: 'The moments, people and places behind the photographs.', sections: ['rnrStories', 'rnrFood', 'rnrThenNow', 'lifetimeDocumentary'], soon: 'The first stories are being written.' },
     plan:    { label: 'Journey Plan', title: 'Journey Plan', text: 'Trips, plans and adventures — where I have been and where I am going next.', sections: ['rnrJourneyPlan'], soon: 'The first plans are being written.' },
     about:   { label: 'About Me', title: 'About Me', text: 'An international student in Toronto with a dream of seeing the whole world.', sections: ['aboutMeSection', 'rnrGuestbook', 'contact'] },
-    toolkit: { label: 'My Toolkit', owner: true, title: 'My Toolkit', text: 'Private tools to plan, record and back up your journeys. Only you can see this page.', sections: [] }
+    settings: { label: 'Settings', owner: true, title: 'Settings', text: 'Security, backups and private records — expenses, reservations, wallet and encrypted notes. Only you can see this page.', sections: [] }
   };
+  // Old links to "My Toolkit" now open the matching new place.
+  const ALIAS = { toolkit: 'plan', settings: 'settings' };
+  const pageKey = key => (PAGES[key] ? key : (ALIAS[key] || null));
   // Sections that are only for the owner, even on public pages.
   const OWNER_ONLY_SECTIONS = new Set(['lifetimeDocumentary']);
   // Older photo tools that were removed from My Toolkit (kept in the files, never shown).
   const RETIRED_SECTIONS = new Set(['premiumStudio', 'humanJournal', 'rnrArchivePolish']);
-  const ORDER = ['home', 'travels', 'stories', 'timeline', 'plan', 'study', 'about', 'videos', 'toolkit'];
+  const ORDER = ['home', 'travels', 'stories', 'timeline', 'plan', 'study', 'about', 'videos', 'settings'];
 
-  // Every section not placed on a public page goes to the owner's toolkit.
+  // ---------- The old "My Toolkit" is split in two ----------
+  // Journey Plan (owner view): every planning / record tool, in the same order as before,
+  //   below the public plan. Visitors still only see the public plan cards.
+  // Settings (owner only): security, backups and private money / booking / notes tools.
+  const PRIVATE_TOOLS = ['Travel Expense Tracker', 'Travel Reservation Vault', 'Multi-Currency Travel Wallet',
+    'Encrypted Personal Notes', 'Offline Data & Backup', 'Ultimate Explorer Backup', 'Final Journey Pack Backup',
+    'One Archive Across Every Device'];
+  const SETTINGS_ONLY = ['rnrMaintenancePanel'];
   function assignToolkit() {
-    const placed = new Set(ORDER.filter(key => key !== 'toolkit').flatMap(key => PAGES[key].sections));
-    PAGES.toolkit.sections = [...main.children]
+    const placed = new Set(ORDER.filter(key => key !== 'settings').flatMap(key => PAGES[key].sections));
+    const tools = [...main.children]
       .filter(el => el.tagName === 'SECTION' && el.id && !placed.has(el.id) && !RETIRED_SECTIONS.has(el.id) && el.id !== 'rnrPageBanner' && el.id !== 'rnrComingSoon')
       .map(el => el.id);
+    const planTools = tools.filter(id => !SETTINGS_ONLY.includes(id));
+    planTools.forEach(id => OWNER_ONLY_SECTIONS.add(id));
+    // Put the tools straight after the public plan, keeping their order.
+    const plan = document.getElementById('rnrJourneyPlan');
+    const maint = document.getElementById('rnrMaintenancePanel');
+    if (plan && maint) plan.after(maint);
+    if (plan) { let at = maint && plan.nextElementSibling === maint ? maint : plan; planTools.forEach(id => { const el = document.getElementById(id); if (el) { at.after(el); at = el; } }); }
+    PAGES.plan.sections = ['rnrJourneyPlan', ...planTools];
+    PAGES.settings.all = [...SETTINGS_ONLY.filter(id => tools.includes(id)), ...planTools];
+    PAGES.settings.sections = PAGES.settings.all.slice();
+    markPrivate();
+  }
+
+  // Mark the private tools inside the shared sections. On Journey Plan they are hidden;
+  // on Settings only they (and the wrappers around them) are shown.
+  function privateBlock(heading, section) {
+    if (heading.parentElement === section || heading.parentElement.querySelectorAll(':scope > h2, :scope > h3').length > 2) {
+      const run = []; let el = heading;
+      do { run.push(el); el = el.nextElementSibling; } while (el && el.tagName !== heading.tagName);
+      return run;
+    }
+    const others = el => [...el.querySelectorAll('h2, h3')].filter(h => h !== heading && !/^[+＋]/.test(h.textContent.trim())).length;
+    let box = heading;
+    while (box.parentElement && box.parentElement !== section && others(box.parentElement) === 0) box = box.parentElement;
+    return [box];
+  }
+  function markPrivate() {
+    (PAGES.settings.all || []).forEach(id => {
+      const section = document.getElementById(id);
+      if (!section || SETTINGS_ONLY.includes(id)) return;
+      section.querySelectorAll('.rnr-private-block, .rnr-set-skip, .rnr-set-path, .rnr-plan-hide').forEach(el => el.classList.remove('rnr-private-block', 'rnr-set-skip', 'rnr-set-path', 'rnr-plan-hide'));
+      const keep = new Set(), path = new Set();
+      section.querySelectorAll('h2, h3').forEach(h => {
+        if (!PRIVATE_TOOLS.includes(h.textContent.trim()) || h.closest('.rnr-tk-hidden')) return;
+        privateBlock(h, section).forEach(el => {
+          el.classList.add('rnr-private-block'); keep.add(el);
+          // A tab button that opens this tool is hidden on Journey Plan.
+          const panel = el.dataset?.fjPanel || el.dataset?.uxPanel;
+          if (panel) section.querySelectorAll(`[data-fj-tab="${panel}"], [data-ux-tab="${panel}"]`).forEach(t => t.classList.add('rnr-plan-hide'));
+          for (let up = el.parentElement; up && up !== section; up = up.parentElement) { keep.add(up); path.add(up); up.classList.add('rnr-set-path'); }
+        });
+      });
+      section.classList.toggle('rnr-has-private', keep.size > 0);
+      if (!keep.size) return;
+      [section, ...path].forEach(el => [...el.children].forEach(child => { if (!keep.has(child)) child.classList.add('rnr-set-skip'); }));
+    });
+    // Settings shows only sections that hold a private tool.
+    PAGES.settings.sections = (PAGES.settings.all || []).filter(id => SETTINGS_ONLY.includes(id) || document.getElementById(id)?.classList.contains('rnr-has-private'));
   }
 
   // ---------- Contact section (About page) ----------
@@ -127,19 +187,6 @@
   banner.innerHTML = '<div class="rnr-page-banner-inner"><p class="eyebrow" id="rnrBannerEyebrow">RASEL ON THE RUN</p><h1 id="rnrBannerTitle"></h1><p id="rnrBannerText"></p></div>';
   main.prepend(banner);
 
-  // Quick links on the owner's toolkit page (it holds many tools).
-  function buildToolkitLinks() {
-    const box = document.createElement('nav');
-    box.className = 'rnr-toolkit-links';
-    box.setAttribute('aria-label', 'Tools on this page');
-    box.innerHTML = PAGES.toolkit.sections.map(id => {
-      const el = document.getElementById(id);
-      const title = el?.querySelector('h2, h1, h3')?.textContent?.trim();
-      return title ? `<a href="#${id}">${title.replace(/[&<>"']/g, '')}</a>` : '';
-    }).join('');
-    banner.querySelector('.rnr-page-banner-inner').append(box);
-  }
-
   const soon = document.createElement('section');
   soon.id = 'rnrComingSoon';
   soon.className = 'rnr-coming-soon';
@@ -180,14 +227,14 @@
     if (brand) brand.setAttribute('href', '#home');
   }
 
-  // Header order: Home · Travel Destinations · Stories · Timeline · Study Journey ·
-  // My Toolkit · Add Photos · Videos · Publish · About Me · Admin
-  // (My Toolkit, Add Photos, Publish and Admin are only shown to the owner.)
+  // Header order: Home · Travel Destinations · Stories · Timeline · Journey Plan ·
+  // My Study Journey · About Me · Videos · Settings · Publish · Admin
+  // (Settings, Publish and Admin are only shown to the owner.)
   function navSequence() {
     const link = key => nav.querySelector(`a.rnr-nav-link[data-page="${key}"]`);
     const id = x => document.getElementById(x);
     return [link('home'), link('travels'), link('stories'), link('timeline'), link('plan'), link('study'),
-      link('about'), link('videos'), id('rnrPublishButton'), id('ownerAdminToggle')].filter(Boolean);
+      link('about'), link('videos'), link('settings'), id('rnrPublishButton'), id('ownerAdminToggle')].filter(Boolean);
   }
   let arranging = false;
   function arrangeNav() {
@@ -313,6 +360,7 @@
   }
 
   function showPage(key, { push = true, scroll = 'top' } = {}) {
+    key = pageKey(key) || key;
     if (!PAGES[key] || (PAGES[key].owner && !isAdmin())) key = 'home';
     const changed = key !== current;
     current = key;
@@ -359,10 +407,17 @@
       setTimeout(() => document.getElementById('ownerAdminToggle')?.focus(), 200);
       return;
     }
-    if (!hash || PAGES[hash]) { showPage(hash || 'home', { push }); return; }
+    // Postcard / shared links: #place=<country>
+    if (/^place=/.test(hash)) {
+      showPage('travels', { push: false });
+      const go = () => window.RNR_POSTCARD?.openPlace(hash.slice(6));
+      if (document.readyState === 'complete') setTimeout(go, 100); else addEventListener('load', () => setTimeout(go, 100), { once: true });
+      return;
+    }
+    if (!hash || pageKey(hash)) { showPage(pageKey(hash) || 'home', { push }); if (hash && !PAGES[hash]) history.replaceState(null, '', `#${pageKey(hash)}`); return; }
     const target = document.getElementById(hash);
     const section = target?.closest('main > section');
-    const key = section ? pageOfSection(section.id) : null;
+    const key = target?.closest('.rnr-private-block') && isAdmin() ? 'settings' : section ? pageOfSection(section.id) : null;
     showPage(key || 'home', { push: false, scroll: key ? 'none' : 'top' });
     if (!target) { history.replaceState(null, '', '#home'); lostNotice(); }
     if (target) requestAnimationFrame(() => nativeScrollIntoView.call(target, { block: 'start' }));
@@ -371,8 +426,8 @@
   document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
-    const key = link.getAttribute('href').slice(1);
-    if (!PAGES[key]) return;
+    const key = pageKey(link.getAttribute('href').slice(1));
+    if (!key) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     showPage(key);
@@ -423,9 +478,12 @@
   if (memories) new MutationObserver(refresh).observe(memories, { childList: true, subtree: true });
 
   function init() {
+    // English only: forget an old Bangla choice from earlier versions.
+    try { localStorage.removeItem('raselOnTheRunLanguageV1'); } catch {}
+    document.documentElement.lang = 'en';
     buildContact();
     assignToolkit();
-    buildToolkitLinks();
+    setTimeout(markPrivate, 900); setTimeout(markPrivate, 2600);
     buildNav();
     arrangeNav();
     buildFooter();

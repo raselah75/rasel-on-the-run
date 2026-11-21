@@ -98,7 +98,7 @@
     const bgImg = st.getPropertyValue('background-image');
     let bgLight = false, bgColoured = false;
     if (bgC) { if (neutralLight(bgC)) { bgLight = true; out.push(`background-color:${darkBg(bgC)}`); } else if (bgC[3] > 0.3 && lum(bgC) > 0.3) bgColoured = true; }
-    if (bgImg && /gradient/.test(bgImg) && !/url\(/.test(bgImg)) {
+    if (bgImg && /gradient/.test(bgImg) && !/url\(|var\(/.test(bgImg)) { // photos and colour variables are left alone
       const stops = (bgImg.match(/rgba?\([^)]+\)|#[0-9a-f]{3,8}\b|\bwhite\b/gi) || []).map(rgba).filter(Boolean);
       if (stops.length && stops.every(c => neutralLight(c) || c[3] < 0.2)) { bgLight = true; out.push('background-image:none', `background-color:${darkBg(stops[0])}`); }
       else if (stops.some(c => c[3] > 0.3 && lum(c) > 0.3)) bgColoured = true;

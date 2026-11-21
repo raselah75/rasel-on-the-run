@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0f2233">
   <title>Lost on the road · Rasel On the Run</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect x=%222%22 y=%222%22 width=%2260%22 height=%2260%22 rx=%2218%22 fill=%22%230f2233%22/%3E%3Ccircle cx=%2244%22 cy=%2220%22 r=%226%22 fill=%22%23f08a5d%22/%3E%3Cpath d=%22M8 50 24 28l8 11 7-8 17 19Z%22 fill=%22%231d6b74%22/%3E%3Cpath d=%22M21 46V20h9.5a7 7 0 0 1 0 14H21m8 0 9 12%22 fill=%22none%22 stroke=%22white%22 stroke-width=%224.2%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
-  <script>try{if(localStorage.getItem('raselOnTheRunThemeModeV1')==='dark')document.documentElement.classList.add('dark');if(localStorage.getItem('raselOnTheRunLanguageV1')==='bn')document.documentElement.lang='bn';}catch(e){}</script>
+  <script>try{if(localStorage.getItem('raselOnTheRunThemeModeV1')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
   <style>
     :root { --ink:#0f2233; --muted:#5b6b78; --paper:#fffaf3; --bg1:#fff4e6; --bg2:#e6f2f1; --sun:#ee8456; --teal:#1d6b74; --road:#33475b; }
     html.dark { --ink:#eef4f7; --muted:#9fb0bd; --paper:#0f1c28; --bg1:#071019; --bg2:#0d2230; --road:#5d7488; }
@@ -45,12 +45,11 @@
       <g class="car" transform="translate(0 0)"><g transform="translate(150 176)"><rect x="0" y="6" width="44" height="16" rx="6" fill="var(--ink)"/><path d="M8 7 15 0h15l7 7Z" fill="var(--ink)"/><circle cx="11" cy="23" r="5" fill="var(--road)"/><circle cx="33" cy="23" r="5" fill="var(--road)"/></g></g>
     </svg>
     <span class="code">404</span>
-    <h1 data-bn="এই রাস্তা কোথাও যায় না">This road doesn't lead anywhere</h1>
-    <p data-bn="আপনি যে পাতাটি খুঁজছেন সেটি মানচিত্রের বাইরে চলে গেছে। হয়তো লিংকটি পুরোনো, বা পথে কোনো অক্ষর হারিয়ে গেছে।">The page you were looking for has wandered off the map. Maybe the link is old, or a letter went missing on the way.</p>
-    <div class="actions"><a class="primary" href="/" data-bn="হোমে ফিরে চলুন">Take me home →</a><a class="ghost" href="/#travels" data-bn="ভ্রমণের গন্তব্য">Travel Destinations</a></div>
+    <h1>This road doesn't lead anywhere</h1>
+    <p>The page you were looking for has wandered off the map. Maybe the link is old, or a letter went missing on the way.</p>
+    <div class="actions"><a class="primary" href="/">Take me home →</a><a class="ghost" href="/#travels">Travel Destinations</a></div>
   </main>
   <script>
-    if (document.documentElement.lang === 'bn') document.querySelectorAll('[data-bn]').forEach(el => { const arrow = el.textContent.includes('→') ? ' →' : ''; el.textContent = el.dataset.bn + arrow; });
     
   </script>
 </body>

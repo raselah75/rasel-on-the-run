@@ -1025,3 +1025,65 @@ Offline cache version: shell-v42.
 - Never put the service_role / secret key in the site.
 - Database + storage rules installed with: supabase db push --remote
 Offline cache version: shell-v43.
+
+== My Toolkit removed → Journey Plan + Settings; phone layout tightened (Nov 21, 2026) ==
+- "My Toolkit" is gone. Its planning / record tools now sit on the Journey
+  Plan page under the public plan, in the same order as before (only you
+  see them in Admin; visitors still only see the plan cards).
+- New owner-only "Settings" page in the header (before Publish): Security &
+  Maintenance, Travel Expense Tracker, Reservation Vault, Multi-Currency
+  Wallet, Encrypted Personal Notes and every backup / restore tool.
+  Old #toolkit links open Journey Plan.
+- Phones: less empty space between sections, shorter country / state / city
+  cards (2 per row), Journey Plan groups become swipe rows → much shorter pages.
+Offline cache version: shell-v44.
+
+== 5 smart features (Nov 21, 2026) ==
+15. QR POSTCARDS (postcard.js + qr-code.js): on every country page a
+    "📮 Postcard" button makes a postcard picture — country photo,
+    "Greetings from …", flag stamp, dated postmark, divisions/cities count
+    and a QR code. Scanning the QR opens that country. Download / Share /
+    Copy link. Links like  rasel-on-the-run.vercel.app/#place=bangladesh
+    open a country directly. The QR maker is built in (no service).
+16. GUESTBOOK MAP (guestbook-map.js): approved notes with a "From" place
+    become pins on a world map on About Me, with "Notes from N places".
+18. SEASONS, smarter (seasons.js): live Toronto weather (Open-Meteo, no key)
+    shows real rain or snow with "Raining in Toronto right now · 4°C";
+    Ramadan = crescent moon + glowing lanterns; Eid = crescent moon + stars;
+    the effect now also runs on the top banner of every page.
+    Admin → "✦ Season" on the cover can still force a theme (new: Ramadan, Rain).
+19. CARD COLOURS FROM THE PHOTO (card-tint.js): each country / state / city
+    card takes its fade, glow, label and button colour from its own photo.
+20. AMBIENT SOUND (ambient.js): 🔈 button bottom-left — Auto, Ocean waves,
+    Rain, Forest birds, Wind, Night crickets + volume. Made live with the
+    Web Audio API (no audio files). Never starts by itself.
+Offline cache version: shell-v45.
+
+== Story Highlights + final check (Nov 21, 2026) ==
+- STORY HIGHLIGHTS (highlights.js): Instagram-style round highlights above
+  "My Destinations" (Home + Travel Destinations country list). Colourful ring,
+  cover photo, name + flag. Tap → full-screen story: progress bars, tap left /
+  right, hold to pause, swipe down or Esc to close, swipe sideways for the next
+  highlight, arrow keys, Space = pause. Seen highlights get a grey ring.
+- Until you make your own, one highlight per country with photos is built
+  automatically (favourites first, up to 15 photos).
+- Admin: "＋ New" and "✎" on each highlight → name, flag/emoji, 6 ring colours,
+  pick the best photos in play order (first = cover) or upload new ones,
+  move left / right, delete. Included in Publish (with logo + GPS removed).
+- Final check: see PROJECT-CHECK-REPORT.txt (duplicate logo and dev test files removed).
+Offline cache version: shell-v46.
+
+== Fix: card photos in dark mode (Nov 21, 2026) ==
+- In dark mode the automatic dark-colour helper (theme-mode.js) mistook the new
+  photo-coloured card style for a light background and hid the card photos.
+  It now leaves alone any background that uses a photo or colour variable.
+Offline cache version: shell-v47.
+
+== English only (Nov 21, 2026) ==
+- The Bangla language option is removed from the whole website: no "বাংলা"
+  button in the header, language.js deleted, the 404 and offline pages are
+  English only, and the passport page label now reads "VISAS · STAMPS".
+- Visitors who chose Bangla before are switched back to English automatically.
+- Some modules still contain small unused Bangla text inside their code; it
+  never shows because the site is always English.
+Offline cache version: shell-v48.

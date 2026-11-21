@@ -1,6 +1,6 @@
 /* =====================================================================
    RASEL ON THE RUN — MY JOURNEY PLAN (public page)
-   Shows the trips, plans and adventures you write in My Toolkit as tidy
+   Shows the trips, plans and adventures you write in the planning tools (owner only, below the plan) as tidy
    cards (text only, no photos):
      Plans      — Journey Itinerary, Smart Trip Planner
      Trips      — Epic Road Trips, Travel Routes, Camping
@@ -148,8 +148,8 @@
   section.id = 'rnrJourneyPlan';
   section.className = 'section rnr-plan-section';
   section.innerHTML = `
-    <div class="rnr-plan-owner"><span>Only you can see this:</span> add or edit entries in My Toolkit —
-      <a href="#nextTravelUpgrade">Itinerary &amp; routes</a><a href="#adventureExplorer">Adventures, road trips &amp; camping</a><a href="#advancedAdventure">Trails, parks &amp; wildlife</a><a href="#finalJourneyPack">Smart Trip Planner</a><a href="#toolkit" class="rnr-plan-alltools">🧰 All my tools (backup, photo book, security)</a></div>
+    <div class="rnr-plan-owner"><span>Only you can see this:</span> add or edit entries in the tools below —
+      <a href="#nextTravelUpgrade">Itinerary &amp; routes</a><a href="#adventureExplorer">Adventures, road trips &amp; camping</a><a href="#advancedAdventure">Trails, parks &amp; wildlife</a><a href="#finalJourneyPack">Smart Trip Planner</a><a href="#settings" class="rnr-plan-alltools">⚙️ Settings (security, backup, expenses)</a></div>
     <div class="rnr-plan-next"></div>
     <div class="rnr-plan-tabs" role="tablist" aria-label="Filter"></div>
     <div class="rnr-plan-grid"></div>
@@ -172,7 +172,7 @@
       ${facts.length ? `<dl class="rnr-plan-facts">${facts.map(([k, v]) => `<div><dt>${esc(L(k))}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
       ${it.notes ? `<p class="rnr-plan-notes${long && !opened ? ' is-clamped' : ''}">${esc(it.notes)}</p>${long ? `<button type="button" class="rnr-plan-more" data-plan-more="${esc(it.id)}">${opened ? T('Show less', 'কম দেখুন') : T('Read more', 'আরও পড়ুন')}</button>` : ''}` : ''}
       ${it.link ? `<a class="rnr-plan-link" href="${esc(it.link)}" target="_blank" rel="noopener noreferrer">${T('Open map', 'ম্যাপ খুলুন')} ↗</a>` : ''}
-      ${it.edit ? `<a class="rnr-owner-pill rnr-plan-edit" href="#${esc(it.edit)}">${it.sample ? 'Example — add your own in My Toolkit' : 'Edit in My Toolkit'}</a>` : ''}
+      ${it.edit ? `<a class="rnr-owner-pill rnr-plan-edit" href="#${esc(it.edit)}">${it.sample ? 'Example — add your own below' : 'Edit below'}</a>` : ''}
     </article>`;
   }
 
@@ -206,7 +206,7 @@
           <div><h3>${T(...CATS[c])}</h3><p>${T(...CAT_TEXT[c])}</p></div><span class="rnr-plan-box-count">${num(counts[c])}</span></div>
         <div class="rnr-plan-cards">${sorted.filter(i => i.cat === c).map(card).join('')}</div>
       </div>`).join('');
-    section.querySelector('.rnr-plan-empty').textContent = all.length ? '' : 'Add a trip plan, road trip, hike or hidden place in My Toolkit and it appears here. Only you can see this message.';
+    section.querySelector('.rnr-plan-empty').textContent = all.length ? '' : 'Add a trip plan, road trip, hike or hidden place in the tools below and it appears here. Only you can see this message.';
     window.RNR_PAGES?.refresh();
   }
 

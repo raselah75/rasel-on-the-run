@@ -41,7 +41,7 @@
         <span class="rnr-pp-count"><b data-pp-count>0</b> <span>countries</span></span>
       </div>
       <div class="rnr-passport-page">
-        <div class="rnr-pp-pagehead"><span>VISAS · ভিসা</span><span class="rnr-pp-pageno">07</span></div>
+        <div class="rnr-pp-pagehead"><span>VISAS · STAMPS</span><span class="rnr-pp-pageno">07</span></div>
         <div class="rnr-pp-stamps" role="list"></div>
         <p class="rnr-pp-empty">No stamps yet. Press "+ Add a stamp", type the country (for example Switzerland) and the date. Only you can see this message.</p>
       </div>
