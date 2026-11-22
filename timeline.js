@@ -1,6 +1,10 @@
 /* =====================================================================
    RASEL ON THE RUN — TIMELINE + YEAR IN TRAVELS
-   Timeline page: photos, videos and stories grouped by month, newest first.
+   Timeline page: one box per year (2028 → 2014). Photos are never shown on
+   the page itself — open a year's box to see its photos, videos and stories
+   by month, the Year in travels card, the recap and the year card.
+   Admin: "＋ Choose photos" inside a year box adds photos to that year
+   (pick the month, or "Not sure" → "Sometime in <year>").
    Year in travels: totals for the chosen year and a downloadable card
    (1080×1350 image for Instagram/Facebook/WhatsApp).
    Dates: photo date (camera or set by you), video date, story date.
@@ -14,17 +18,26 @@
   const num = n => (bn() ? String(n).replace(/\d/g, x => '০১২৩৪৫৬৭৮৯'[x]) : String(n));
   const T = (en, b) => (bn() ? b : en);
 
+  const FIRST_YEAR = 2014, LAST_YEAR = 2028;
+  const isAdmin = () => document.body.classList.contains('admin-mode');
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
   const section = document.createElement('section');
   section.id = 'rnrTimeline';
-  section.className = 'section rnr-tl-section';
+  section.className = 'section rnr-tl-section has-items';
   section.innerHTML = `
-    <div class="rnr-tl-years" role="tablist" aria-label="Choose a year"></div>
-    <div class="rnr-tl-summary"></div>
-    <div class="rnr-tl-months"></div>`;
+    <div class="rnr-tl-years" hidden></div>
+    <div class="rnr-tl-boxes" role="list" aria-label="Years"></div>
+    <div class="rnr-tl-open" hidden>
+      <button type="button" class="rnr-tl-back" data-tl-back>← All years</button>
+      <div class="rnr-tl-summary"></div>
+      <div class="rnr-tl-add" hidden></div>
+      <div class="rnr-tl-months"></div>
+    </div>`;
   main.append(section);
 
   let data = { photos: [], films: [], stories: [] };
-  let year = null;
+  let year = null;      // the year shown inside its open box (null = all boxes)
 
   const monthKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   function collect() {
@@ -53,41 +66,78 @@
     });
     return { cities, countries };
   }
+  const plural = (n, one, many) => `${num(n)} ${n === 1 ? one : many}`;
 
   function render() {
     const items = collect();
-    const years = [...new Set(items.map(i => i.date.getFullYear()))].sort((a, b) => b - a);
-    section.classList.toggle('has-items', items.length > 0);
-    if (!years.length) { section.querySelector('.rnr-tl-years').innerHTML = ''; section.querySelector('.rnr-tl-summary').innerHTML = ''; section.querySelector('.rnr-tl-months').innerHTML = ''; window.RNR_PAGES?.refresh(); return; }
-    if (!years.includes(year)) {
-      const withPhotos = years.find(y => items.some(i => i.type === 'photo' && i.date.getFullYear() === y));
-      year = withPhotos ?? years[0];
+    const now = new Date().getFullYear();
+    const lo = Math.min(FIRST_YEAR, ...items.map(i => i.date.getFullYear()));
+    const hi = Math.max(LAST_YEAR, ...items.map(i => i.date.getFullYear()));
+    const all = []; for (let y = hi; y >= lo; y -= 1) all.push(y);
+    const boxes = section.querySelector('.rnr-tl-boxes');
+    const open = section.querySelector('.rnr-tl-open');
+    boxes.hidden = year !== null;
+    open.hidden = year === null;
+    // ---- all years: one box per year, no photos outside the boxes ----
+    if (year === null) {
+      section.querySelector('.rnr-tl-years').innerHTML = '';
+      boxes.innerHTML = all.map(y => {
+        const inY = items.filter(i => i.date.getFullYear() === y);
+        const c = t => inY.filter(i => i.type === t).length;
+        const { countries } = placesOf(inY);
+        const parts = [c('photo') && plural(c('photo'), 'photo', 'photos'), c('video') && plural(c('video'), 'video', 'videos'), c('story') && plural(c('story'), 'story', 'stories')].filter(Boolean);
+        const tag = y === now ? '<span class="rnr-tl-tag is-now">This year</span>' : y > now ? '<span class="rnr-tl-tag is-future">Coming up</span>' : '';
+        const empty = !inY.length;
+        return `<div class="rnr-tl-box${empty ? ' is-empty' : ''}${y === now ? ' is-now' : ''}" role="listitem">
+          <button type="button" class="rnr-tl-box-open" data-tl-open="${y}" aria-label="${y}: ${parts.length ? parts.join(', ') : 'no memories yet'}">
+            ${tag}<span class="rnr-tl-box-year">${num(y)}</span>
+            <span class="rnr-tl-box-line">${parts.length ? parts.join(' · ') : (y > now ? 'Adventures ahead' : 'No memories yet')}</span>
+            ${countries.size ? `<span class="rnr-tl-box-places">${[...countries].slice(0, 3).map(n => `${esc(window.RNR_WORLD?.flag?.(n) || '')} ${esc(n)}`).join(' · ')}</span>` : ''}
+            <span class="rnr-tl-box-go" aria-hidden="true">${empty ? (isAdmin() ? '＋ Add' : '') : 'Open →'}</span>
+          </button></div>`;
+      }).join('');
+      window.RNR_PAGES?.refresh();
+      return;
     }
-    section.querySelector('.rnr-tl-years').innerHTML = years.map(y => `<button type="button" role="tab" aria-selected="${y === year}" data-year="${y}">${num(y)}</button>`).join('');
+    // ---- one year opened ----
+    section.querySelector('.rnr-tl-years').innerHTML = `<button type="button" role="tab" aria-selected="true" data-year="${year}">${year}</button>`;
     const inYear = items.filter(i => i.date.getFullYear() === year);
     const { cities, countries } = placesOf(inYear);
     const count = t => inYear.filter(i => i.type === t).length;
     const top = [...cities.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n]) => n);
     section.querySelector('.rnr-tl-summary').innerHTML = `
       <div class="rnr-year-card">
-        <div><p class="eyebrow">${T('YEAR IN TRAVELS', 'বছরের ভ্রমণ')}</p><h2>${num(year)}</h2>${top.length ? `<p class="rnr-year-top">${T('Most photographed', 'সবচেয়ে বেশি ছবি')}: ${top.map(esc).join(' · ')}</p>` : ''}</div>
+        <div><p class="eyebrow">YEAR IN TRAVELS</p><h2>${num(year)}</h2>${top.length ? `<p class="rnr-year-top">Most photographed: ${top.map(esc).join(' · ')}</p>` : ''}</div>
         <div class="rnr-year-stats">
-          <div><strong>${num(count('photo'))}</strong><span>${T('Photos', 'ছবি')}</span></div>
-          <div><strong>${num(count('video'))}</strong><span>${T('Videos', 'ভিডিও')}</span></div>
-          <div><strong>${num(count('story'))}</strong><span>${T('Stories', 'গল্প')}</span></div>
-          <div><strong>${num(cities.size)}</strong><span>${T('Cities', 'শহর')}</span></div>
-          <div><strong>${num(countries.size)}</strong><span>${T('Countries', 'দেশ')}</span></div>
+          <div><strong>${num(count('photo'))}</strong><span>Photos</span></div>
+          <div><strong>${num(count('video'))}</strong><span>Videos</span></div>
+          <div><strong>${num(count('story'))}</strong><span>Stories</span></div>
+          <div><strong>${num(cities.size)}</strong><span>Cities</span></div>
+          <div><strong>${num(countries.size)}</strong><span>Countries</span></div>
         </div>
-        <button type="button" class="rnr-year-share" data-year-card>${T('Download year card', 'বছরের কার্ড ডাউনলোড')}</button><button type="button" class="rnr-owner-pill is-solid" data-photo-book data-year="${year}">📖 Photo book</button>
+        ${inYear.length ? `<button type="button" class="rnr-year-share" data-year-card>Download year card</button><button type="button" class="rnr-owner-pill is-solid" data-photo-book data-year="${year}">📖 Photo book</button>` : ''}
       </div>`;
-    // Months
-    const months = new Map();
-    inYear.forEach(i => { const k = monthKey(i.date); if (!months.has(k)) months.set(k, []); months.get(k).push(i); });
+    const add = section.querySelector('.rnr-tl-add');
+    add.hidden = !isAdmin();
+    add.innerHTML = isAdmin() ? `<span class="rnr-tl-add-label">Add photos to ${year}</span>
+      <label class="rnr-tl-add-month">Month <select data-tl-month><option value="">Not sure</option>${MONTHS.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('')}</select></label>
+      <button type="button" class="rnr-tl-add-btn" data-tl-add>＋ Choose photos</button>
+      <small>Photos with a camera date from ${year} keep their own month.</small>` : '';
     const host = section.querySelector('.rnr-tl-months');
     host.innerHTML = '';
-    for (const [key, list] of months) {
-      const [y, m] = key.split('-').map(Number);
-      const label = new Date(y, m - 1, 1).toLocaleDateString(bn() ? 'bn-BD' : 'en-US', { month: 'long', year: 'numeric' });
+    if (!inYear.length) {
+      host.innerHTML = `<div class="rnr-tl-empty"><p>No memories in ${year} yet.</p>${isAdmin() ? '<p>Use “＋ Choose photos” above to add some.</p>' : ''}</div>`;
+      window.RNR_PAGES?.refresh();
+      return;
+    }
+    // Months (photos with only a year go to "Sometime in <year>")
+    const months = new Map();
+    inYear.forEach(i => { const k = i.type === 'photo' && i.ref.yearOnly ? 'any' : monthKey(i.date); if (!months.has(k)) months.set(k, []); months.get(k).push(i); });
+    const keys = [...months.keys()].filter(k => k !== 'any').sort().reverse();
+    if (months.has('any')) keys.push('any');
+    for (const key of keys) {
+      const list = months.get(key);
+      const label = key === 'any' ? `Sometime in ${year}` : (() => { const [y, m] = key.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }); })();
       const photos = list.filter(i => i.type === 'photo').map(i => i.ref);
       const films = list.filter(i => i.type === 'video').map(i => i.ref);
       const stories = list.filter(i => i.type === 'story').map(i => i.ref);
@@ -96,8 +146,8 @@
       block.className = 'rnr-tl-month';
       block.innerHTML = `
         <div class="rnr-tl-head"><span class="rnr-tl-dot" aria-hidden="true"></span><div><h3>${esc(label)}</h3>
-          <p>${[photos.length ? `${num(photos.length)} ${T(photos.length === 1 ? 'photo' : 'photos', 'ছবি')}` : '', films.length ? `${num(films.length)} ${T(films.length === 1 ? 'video' : 'videos', 'ভিডিও')}` : '', stories.length ? `${num(stories.length)} ${T(stories.length === 1 ? 'story' : 'stories', 'গল্প')}` : '', [...mc.keys()].slice(0, 4).map(esc).join(', ')].filter(Boolean).join(' · ')}</p></div></div>
-        <div class="rnr-tl-links">${films.map(f => `<button type="button" class="rnr-tl-chip is-video" data-tl-video="${esc(f.id)}">▶ ${esc(f.title || T('Video', 'ভিডিও'))}</button>`).join('')}${stories.map(s => `<button type="button" class="rnr-tl-chip is-story" data-story="${esc(s.id)}">✎ ${esc(s.title || T('Story', 'গল্প'))}</button>`).join('')}</div>
+          <p>${[photos.length ? plural(photos.length, 'photo', 'photos') : '', films.length ? plural(films.length, 'video', 'videos') : '', stories.length ? plural(stories.length, 'story', 'stories') : '', [...mc.keys()].slice(0, 3).map(esc).join(', ')].filter(Boolean).join(' · ')}</p></div></div>
+        <div class="rnr-tl-links">${films.map(f => `<button type="button" class="rnr-tl-chip is-video" data-tl-video="${esc(f.id)}">▶ ${esc(f.title || 'Video')}</button>`).join('')}${stories.map(s => `<button type="button" class="rnr-tl-chip is-story" data-story="${esc(s.id)}">✎ ${esc(s.title || 'Story')}</button>`).join('')}</div>
         <div class="rnr-tl-photos"></div>`;
       host.append(block);
       if (photos.length && window.RNR_GALLERY?.renderInto) window.RNR_GALLERY.renderInto(block.querySelector('.rnr-tl-photos'), photos, { general: true }, '', { plain: true, keepOrder: false });
@@ -105,13 +155,48 @@
     window.RNR_PAGES?.refresh();
   }
 
+  function openYear(y) {
+    year = y;
+    render();
+    requestAnimationFrame(() => section.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }));
+    section.querySelector('[data-tl-back]')?.focus({ preventScroll: true });
+  }
+  function closeYear() {
+    const was = year;
+    year = null;
+    render();
+    requestAnimationFrame(() => section.querySelector(`[data-tl-open="${was}"]`)?.focus({ preventScroll: false }));
+  }
+  function addToYear() {
+    if (!isAdmin() || year === null) return;
+    const month = section.querySelector('[data-tl-month]')?.value || '';
+    const picker = document.createElement('input');
+    picker.type = 'file'; picker.accept = 'image/*'; picker.multiple = true;
+    picker.addEventListener('change', async () => {
+      const files = [...(picker.files || [])];
+      if (!files.length || !window.RNR_GALLERY?.addPhotos) return;
+      const n = await window.RNR_GALLERY.addPhotos(files, { general: true, year, month: month ? Number(month) : null });
+      if (n) window.dispatchEvent(new CustomEvent('rnr:photos-changed'));
+      load();
+    });
+    picker.click();
+  }
+
   section.addEventListener('click', e => {
-    const y = e.target.closest('[data-year]');
-    if (y) { year = Number(y.dataset.year); render(); return; }
+    const o = e.target.closest('[data-tl-open]');
+    if (o) { openYear(Number(o.dataset.tlOpen)); return; }
+    if (e.target.closest('[data-tl-back]')) { closeYear(); return; }
+    if (e.target.closest('[data-tl-add]')) { addToYear(); return; }
     if (e.target.closest('[data-year-card]')) yearCard();
     const v = e.target.closest('[data-tl-video]');
     if (v) window.RNR_VIDEOS?.play(v.dataset.tlVideo);
   });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && year !== null && !section.classList.contains('rnr-off') && ![...document.querySelectorAll('.rnr-viewer.is-open, [role=dialog][aria-modal=true]')].some(d => !d.hidden && d.getClientRects().length)) closeYear(); });
+  // Opening the Timeline page always starts at the year boxes.
+  let wasOff = section.classList.contains('rnr-off');
+  new MutationObserver(() => { const off = section.classList.contains('rnr-off'); if (off && !wasOff) year = null; wasOff = off; }).observe(section, { attributes: true, attributeFilter: ['class'] });
+  let lastAdmin = isAdmin();
+  new MutationObserver(() => { if (isAdmin() !== lastAdmin) { lastAdmin = isAdmin(); if (!section.classList.contains('rnr-off')) render(); } }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
   // ---------- downloadable year card ----------
   async function yearCard() {
@@ -156,6 +241,6 @@
   const visible = () => !section.classList.contains('rnr-off');
   new MutationObserver(() => { if (visible()) load(); }).observe(section, { attributes: true, attributeFilter: ['class'] });
   ['rnr:photos-changed', 'rnr:viewer-closed', 'rnr:language'].forEach(ev => addEventListener(ev, () => { if (visible()) load(); }));
-  window.RNR_TIMELINE = { reload: load, yearCard };
+  window.RNR_TIMELINE = { reload: load, yearCard, open: openYear, close: closeYear };
   setTimeout(load, 1200);
 })();

@@ -1087,3 +1087,17 @@ Offline cache version: shell-v47.
 - Some modules still contain small unused Bangla text inside their code; it
   never shows because the site is always English.
 Offline cache version: shell-v48.
+
+== Highlights removed + Timeline year boxes (Nov 21, 2026) ==
+- Story Highlights removed completely (highlights.js deleted, styles and
+  Publish entries removed, saved highlight data cleared on the next visit).
+- TIMELINE is now one box per year, 2028 → 2014 (wider if you have older or
+  newer photos). No photos show on the Timeline page itself: each box shows
+  only the year, how many photos / videos / stories and the countries.
+  "This year" and "Coming up" tags. Tap a box to open it: Year in travels
+  card, "Play my <year> recap", year card, photo book, then that year's
+  photos, videos and stories by month. "← All years" or Esc goes back.
+- Admin: inside any year box, "Add photos to <year>" → choose the month (or
+  "Not sure" → shown as "Sometime in <year>") → "＋ Choose photos". Photos
+  whose camera date is already in that year keep their own month.
+Offline cache version: shell-v49.

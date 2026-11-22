@@ -121,6 +121,13 @@
     for (const file of images) {
       try {
         const taken = await exifDate(file);
+        // Added from a Timeline year box: keep the photo in that year.
+        const want = place.year ? Number(place.year) : null;
+        let travelDate = null, yearOnly = false;
+        if (want && !(taken && taken.getFullYear() === want)) {
+          if (place.month) travelDate = `${want}-${String(place.month).padStart(2, '0')}-15`;
+          else { travelDate = `${want}-06-15`; yearOnly = true; }
+        }
         const small = typeof window.RNR_SHRINK === 'function' ? await window.RNR_SHRINK(file).catch(() => file) : file;
         const dims = await dimensions(small);
         await savePhoto({
@@ -135,6 +142,8 @@
           showInMemories: Boolean(place.general),
           uploadedAt: new Date().toISOString(),
           takenAt: taken ? taken.toISOString() : null,
+          ...(travelDate ? { travelDate } : {}),
+          ...(yearOnly ? { yearOnly: true } : {}),
           fileDate: file.lastModified ? new Date(file.lastModified).toISOString() : null,
           width: dims?.width || null,
           height: dims?.height || null

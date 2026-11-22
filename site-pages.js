@@ -481,6 +481,8 @@
     // English only: forget an old Bangla choice from earlier versions.
     try { localStorage.removeItem('raselOnTheRunLanguageV1'); } catch {}
     document.documentElement.lang = 'en';
+    // Story Highlights were removed: clear their saved data.
+    try { localStorage.removeItem('raselOnTheRunHighlightsV1'); indexedDB.deleteDatabase('RaselOnTheRunHighlightsV1'); } catch {}
     buildContact();
     assignToolkit();
     setTimeout(markPrivate, 900); setTimeout(markPrivate, 2600);
