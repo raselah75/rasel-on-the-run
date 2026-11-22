@@ -2370,3 +2370,19 @@ html.rnr-dark .rnr-tl-add select { background: #0f1b27; color: #eef4f7; border-c
 html.rnr-dark .rnr-tl-add-btn { background: #5cc0c9; color: #071019; }
 html.rnr-dark .rnr-tl-empty { background: rgba(255,255,255,.04); color: #aab8c4; }
 @media (max-width: 700px) { .rnr-tl-boxes { grid-template-columns: 1fr 1fr; gap: 12px; } .rnr-tl-box-open { min-height: 140px; padding: 16px; border-radius: 18px; } .rnr-tl-box-year { font-size: 38px; } .rnr-tl-box-line { font-size: 12.5px; } .rnr-tl-box-places { font-size: 11.5px; } .rnr-tl-box-go { right: 12px; bottom: 12px; font-size: 11.5px; } .rnr-tl-tag { top: 10px; left: 12px; font-size: 9.5px; padding: 4px 8px; } .rnr-tl-box-go { display: none; } }
+
+/* Journey Plan tools are public: visitors see entries, not the editing tools */
+body:not(.admin-mode) .rnr-plan-tool .rnr-owner-ctl,
+body:not(.admin-mode) .rnr-plan-tool input[type=file],
+body:not(.admin-mode) .rnr-plan-tool .rnr-tk-hidden { display: none !important; }
+
+/* Demo content (demo-fill.js) */
+.rnr-demo-toast { position: fixed; left: 50%; bottom: 24px; z-index: 100003; transform: translateX(-50%); max-width: min(560px, calc(100vw - 32px)); padding: 14px 18px; border-radius: 16px; background: #17384c; color: #fff; font: 600 14px/1.4 var(--rnr-font, system-ui); box-shadow: 0 18px 40px rgba(8,20,30,.35); transition: opacity .5s ease, transform .5s ease; }
+.rnr-demo-toast.is-out { opacity: 0; transform: translate(-50%, 10px); }
+.rnr-demo-box { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin: 0 auto 22px; max-width: 1180px; padding: 16px 18px; border-radius: 18px; border: 1.5px dashed #c98a2b; background: #fffaf0; color: #5a3d12; }
+.rnr-demo-box p { margin: 4px 0 0; font-size: 14px; color: #7a5a2b; }
+.rnr-demo-btn { padding: 12px 18px; border-radius: 999px; border: 0; background: #17384c; color: #fff; font: 700 14px/1 var(--rnr-font, system-ui); cursor: pointer; }
+.rnr-demo-btn[disabled] { opacity: .6; cursor: wait; }
+html.rnr-dark .rnr-demo-box { background: rgba(246,196,111,.08); color: #f6dcae; }
+html.rnr-dark .rnr-demo-box p { color: #d9bd8a; }
+html.rnr-dark .rnr-demo-btn { background: #5cc0c9; color: #071019; }

@@ -52,7 +52,7 @@
   // Settings (owner only): security, backups and private money / booking / notes tools.
   const PRIVATE_TOOLS = ['Travel Expense Tracker', 'Travel Reservation Vault', 'Multi-Currency Travel Wallet',
     'Encrypted Personal Notes', 'Offline Data & Backup', 'Ultimate Explorer Backup', 'Final Journey Pack Backup',
-    'One Archive Across Every Device'];
+    'One Archive Across Every Device', 'Offline Adventure Journal', 'Safety & Expedition Management', 'Live GPS Adventure Tracking'];
   const SETTINGS_ONLY = ['rnrMaintenancePanel'];
   function assignToolkit() {
     const placed = new Set(ORDER.filter(key => key !== 'settings').flatMap(key => PAGES[key].sections));
@@ -60,7 +60,7 @@
       .filter(el => el.tagName === 'SECTION' && el.id && !placed.has(el.id) && !RETIRED_SECTIONS.has(el.id) && el.id !== 'rnrPageBanner' && el.id !== 'rnrComingSoon')
       .map(el => el.id);
     const planTools = tools.filter(id => !SETTINGS_ONLY.includes(id));
-    planTools.forEach(id => OWNER_ONLY_SECTIONS.add(id));
+    // Journey Plan tools are public (read-only for visitors; editing stays in Admin).
     // Put the tools straight after the public plan, keeping their order.
     const plan = document.getElementById('rnrJourneyPlan');
     const maint = document.getElementById('rnrMaintenancePanel');
@@ -70,6 +70,35 @@
     PAGES.settings.all = [...SETTINGS_ONLY.filter(id => tools.includes(id)), ...planTools];
     PAGES.settings.sections = PAGES.settings.all.slice();
     markPrivate();
+    markOwnerControls();
+  }
+  // Visitors see the entries but not the forms or edit / delete / backup buttons.
+  const OWNER_CTL = /^\s*(＋|\+|✎|🗑|✕|×)|\b(add|edit|delete|remove|save|backup|restore|export|import|upload|clear|reset|generate|mark as|choose file|download (json|backup)|sync|unlock|lock)\b/i;
+  function markOwnerControls() {
+    (PAGES.plan.sections || []).slice(1).forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      sec.classList.add('rnr-plan-tool');
+      sec.querySelectorAll('button, [role=button], label.btn, a.btn').forEach(b => {
+        if (b.closest('[role=tablist], .fj-tabs, .ux-tabs, .adv-tabs, nav')) return;
+        if (b.dataset.fjTab || b.dataset.uxTab || b.getAttribute('role') === 'tab') return;
+        const text = `${b.textContent} ${b.getAttribute('aria-label') || ''} ${b.title || ''}`;
+        if (OWNER_CTL.test(text) || /delete|remove|edit/i.test(Object.keys(b.dataset).join(' '))) b.classList.add('rnr-owner-ctl');
+      });
+      // "＋ Add …" headings and the line under them belong to the forms.
+      sec.querySelectorAll('h3, h4').forEach(h => {
+        if (!/^\s*[＋+]/.test(h.textContent)) return;
+        h.classList.add('rnr-owner-ctl');
+        const next = h.nextElementSibling;
+        if (next && next.tagName === 'P') next.classList.add('rnr-owner-ctl');
+      });
+      sec.querySelectorAll('form').forEach(f => {
+        const card = f.closest('article, .fj-card, .ux-card, .ax-card, .next-card, .p7-card, .adv-card');
+        if (!card) { f.classList.add('rnr-owner-ctl'); return; }
+        const clone = card.cloneNode(true); clone.querySelectorAll('form, h2, h3, p').forEach(x => x.remove());
+        if (clone.textContent.trim().length < 40) card.classList.add('rnr-owner-ctl'); else f.classList.add('rnr-owner-ctl');
+      });
+    });
   }
 
   // Mark the private tools inside the shared sections. On Journey Plan they are hidden;
@@ -486,6 +515,8 @@
     buildContact();
     assignToolkit();
     setTimeout(markPrivate, 900); setTimeout(markPrivate, 2600);
+    setTimeout(markOwnerControls, 1000); setTimeout(markOwnerControls, 3000);
+    new MutationObserver(() => { clearTimeout(markOwnerControls.t); markOwnerControls.t = setTimeout(markOwnerControls, 300); }).observe(main, { childList: true, subtree: true });
     buildNav();
     arrangeNav();
     buildFooter();

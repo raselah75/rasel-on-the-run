@@ -1,9 +1,9 @@
 RASEL ON THE RUN — FINAL PROJECT CHECK (Nov 21, 2026)
 
 Files
-- 71 JavaScript files: all pass a syntax check.
+- 72 JavaScript files: all pass a syntax check.
 - Every script, style, icon and logo referenced by index.html exists.
-- Every file in the offline cache list (advanced-sw.js, shell-v49) exists, and
+- Every file in the offline cache list (advanced-sw.js, shell-v50) exists, and
   every script in index.html is in the offline cache.
 - No duplicate <script> or <link> tags in index.html.
 - Exact duplicate files: none left. Removed logos/logo-adventure-with-rasel-white.svg

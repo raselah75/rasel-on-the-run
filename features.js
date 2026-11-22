@@ -166,8 +166,26 @@
       if (!point) return;
       const marker=L.marker(point).addTo(map).bindPopup(`<strong>${safe(c.name)}</strong><br>Visited destination`); markers.push(marker);
     });
-    setTimeout(()=>map.invalidateSize(),150);
+    fitMap();
   }
+  // The map is made while its page is hidden (size 0), so it is re-sized and
+  // centred on the visited countries whenever it becomes visible.
+  function fitMap() {
+    if (!map) return;
+    const host = $("#jtWorldMap");
+    if (!host || !host.offsetWidth || !host.offsetHeight) return;
+    map.invalidateSize();
+    const pts = markers.map(m => m.getLatLng());
+    if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 4 });
+    else if (pts.length === 1) map.setView(pts[0], 4);
+    else map.setView([22, 10], 2);
+  }
+  (() => {
+    let fitted = false;
+    const check = () => { const host = $("#jtWorldMap"); if (host && host.offsetWidth && !fitted) { fitted = true; setTimeout(fitMap, 60); } else if (host && !host.offsetWidth) fitted = false; };
+    new MutationObserver(check).observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: false });
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(check); const tryObs = () => { const h = $("#jtWorldMap"); if (h) ro.observe(h); else setTimeout(tryObs, 500); }; tryObs(); }
+  })();
   async function refresh() {
     await renderStats(); renderPassport(); await renderPhotoCollections(); await renderMap();
     addCountryVisitedControls();

@@ -23,7 +23,43 @@
   // What is public. Everything else stays on your device.
   const LOCAL_KEYS = ['raselOnTheRunData', 'raselOnTheRunAboutMe', 'raselOnTheRunStudyJourneyV1', 'raselOnTheRunLifetimeDocumentaryV1',
     'raselOnTheRunCountryOrderV1', 'raselOnTheRunRemovedDefaultsV1', 'raselOnTheRunHeroCoverV1', 'raselOnTheRunSiteTextV1', 'raselOnTheRunNextTripV1', 'raselOnTheRunGlobeListsV1',
-    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1', 'raselOnTheRunJourneyPlanPublicV1', 'raselOnTheRunDistrictsV1', 'raselOnTheRunWatermarkV1', 'raselOnTheRunPlaceNotesV1', 'raselOnTheRunPlaceFactsV1'];
+    'raselOnTheRunPassportV1', 'raselOnTheRunTripRoutesV1', 'raselOnTheRunSeasonV1', 'raselOnTheRunJourneyPlanPublicV1', 'raselOnTheRunDistrictsV1', 'raselOnTheRunWatermarkV1', 'raselOnTheRunPlaceNotesV1', 'raselOnTheRunPlaceFactsV3',
+    // Journey Plan tools (public). Their private parts are removed below.
+    'raselOnTheRunNextUpgradeV1', 'raselOnTheRunAdventureV1', 'raselOnTheRunAdvancedExplorerV1', 'raselOnTheRunUltimateV1',
+    'raselOnTheRunFinalJourneyV1', 'raselOnTheRunPremiumSevenV1'];
+  // Never published: money, bookings, journals, safety / emergency contacts, GPS tracks.
+  const PRIVATE_PARTS = {
+    raselOnTheRunNextUpgradeV1: { drop: ['expenses'] },
+    raselOnTheRunAdvancedExplorerV1: { drop: ['journals', 'safety', 'tracks'] },
+    raselOnTheRunFinalJourneyV1: { drop: ['reservations', 'wallet'], strip: { trips: ['budget', 'currency', 'spent'] } },
+    raselOnTheRunUltimateV1: { drop: ['preferences'] }
+  };
+  // Restoring on a device that already has private parts keeps them.
+  function keepPrivate(key, incoming) {
+    const rule = PRIVATE_PARTS[key];
+    const local = ls.get(key);
+    if (!rule || !local) return incoming;
+    try {
+      const a = JSON.parse(incoming), b = JSON.parse(local);
+      (rule.drop || []).forEach(k => { if (b && k in b) a[k] = b[k]; });
+      Object.entries(rule.strip || {}).forEach(([list, fields]) => {
+        if (!Array.isArray(a[list]) || !Array.isArray(b?.[list])) return;
+        a[list] = a[list].map(r => { const old = b[list].find(x => x.id && x.id === r.id); if (!old) return r; const c = { ...r }; fields.forEach(f => { if (f in old) c[f] = old[f]; }); return c; });
+      });
+      return JSON.stringify(a);
+    } catch { return incoming; }
+  }
+  function publicCopy(key, raw) {
+    const rule = PRIVATE_PARTS[key];
+    if (!rule) return raw;
+    try {
+      const d = JSON.parse(raw);
+      if (!d || typeof d !== 'object' || Array.isArray(d)) return raw;
+      (rule.drop || []).forEach(k => { if (k in d) d[k] = Array.isArray(d[k]) ? [] : {}; });
+      Object.entries(rule.strip || {}).forEach(([list, fields]) => { if (Array.isArray(d[list])) d[list] = d[list].map(r => { const c = { ...r }; fields.forEach(f => delete c[f]); return c; }); });
+      return JSON.stringify(d);
+    } catch { return null; }
+  }
   const DATABASES = [
     { name: 'RaselOnTheRunPhotos', stores: ['photos'], logo: true },
     { name: 'RaselOnTheRunDesignAssets', stores: ['assets'] },
@@ -32,7 +68,8 @@
     { name: 'RaselOnTheRunFilmsV1', stores: ['films'] },
     { name: 'RaselOnTheRunThenNowV1', stores: ['pairs'], logo: true },
     { name: 'RaselOnTheRunFoodDiaryV1', stores: ['dishes'], logo: true },
-    { name: 'RaselOnTheRunPanoramasV1', stores: ['panos'], maxEdge: 6000 }
+    { name: 'RaselOnTheRunPanoramasV1', stores: ['panos'], maxEdge: 6000 },
+    { name: 'RaselOnTheRunSouvenirsV1', stores: ['souvenirs'], logo: true }
   ];
 
   const ls = {
@@ -126,7 +163,7 @@
     const state = ls.json(PUBLISHED_KEY, {});
     // localStorage
     const previousKeys = state.keys || [];
-    Object.entries(site.localStorage || {}).forEach(([k, v]) => ls.set(k, v));
+    Object.entries(site.localStorage || {}).forEach(([k, v]) => ls.set(k, keepPrivate(k, v)));
     previousKeys.filter(k => !(k in (site.localStorage || {}))).forEach(k => ls.del(k));
     // IndexedDB
     let done = 0;
@@ -271,7 +308,7 @@
   async function buildSnapshot(onStep) {
     const site = { version: `${Date.now()}`, publishedAt: new Date().toISOString(), localStorage: {}, databases: [] };
     const files = [];
-    LOCAL_KEYS.forEach(k => { const v = ls.get(k); if (v !== null) site.localStorage[k] = v; });
+    LOCAL_KEYS.forEach(k => { const v = ls.get(k); if (v !== null) { const pub = publicCopy(k, v); if (pub !== null) site.localStorage[k] = pub; } });
     for (const spec of DATABASES) {
       if (!(await dbExists(spec.name))) continue;
       let db;
@@ -466,7 +503,7 @@
   }
 
   // Expose for testing and for other modules.
-  window.RNR_CLOUD = { configured, openPanel, publish, applySnapshot, fetchSite, base: BASE, headers: (token, extra) => headers(token, extra), session };
+  window.RNR_CLOUD = { configured, openPanel, publish, applySnapshot, fetchSite, snapshot: buildSnapshot, base: BASE, headers: (token, extra) => headers(token, extra), session };
 
   // Start
   if (configured && !isOwnerDevice()) visitorSync();

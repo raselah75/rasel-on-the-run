@@ -1101,3 +1101,26 @@ Offline cache version: shell-v48.
   "Not sure" → shown as "Sometime in <year>") → "＋ Choose photos". Photos
   whose camera date is already in that year keep their own month.
 Offline cache version: shell-v49.
+
+== Journey Plan fully public + demo content + map fix (Nov 21, 2026) ==
+- Every Journey Plan tool below the plan cards ("The archive, your way",
+  Travel Statistics, Passport, World Map, Itinerary, Routes, Souvenirs,
+  Calendar, Yearbook, Adventure Explorer, Advanced Adventure records,
+  Ultimate Explorer, Final Journey Collection, Your World, Photo book) is now
+  PUBLIC. Visitors see the entries; forms and Add / Edit / Delete / Backup
+  buttons only show in Admin.
+- Publish now includes these tools (raselOnTheRunNextUpgradeV1, AdventureV1,
+  AdvancedExplorerV1, UltimateV1, FinalJourneyV1, PremiumSevenV1 and the
+  souvenir photos). Private parts are removed before upload: expenses,
+  wallet, reservations, trip budgets, journals, safety contacts and GPS
+  tracks. Restoring a snapshot on your own device keeps your private parts.
+- Offline Adventure Journal, Safety & Expedition Management and Live GPS
+  Adventure Tracking moved to Settings (private).
+- DEMO CONTENT (demo-fill.js): the first time you open the site in Admin mode,
+  every empty public tool gets 2 example entries (demo photos where a photo is
+  needed). Settings → "✨ Fill empty tools with demo content" runs it again;
+  tools that already have entries are never touched. Then press Publish.
+- World map on Journey Plan: it is now re-sized and centred on your visited
+  countries when the page opens (it was drawn while the page was hidden).
+- Publish also uses the current place-facts cache (V3).
+Offline cache version: shell-v50.
